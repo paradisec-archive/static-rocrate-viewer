@@ -1,0 +1,45 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      - name: Build catalog generator
+        run: pnpm build:generator
+
+      - name: Create release tarball
+        run: |
+          mkdir -p release-staging
+          cp dist/index.html release-staging/
+          cp -r dist/assets release-staging/
+          cp dist/generate-catalog.js release-staging/
+          tar -czf static-rocrate-viewer.tar.gz -C release-staging .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            static-rocrate-viewer.tar.gz
+            install.sh
+          generate_release_notes: true

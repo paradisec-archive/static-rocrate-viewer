@@ -1,0 +1,39 @@
+{
+  "name": "static-rocrate-viewer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "pnpm lint:biome && pnpm lint:types && pnpm lint:knip",
+    "lint:biome": "biome check",
+    "lint:types": "tsc -b --noEmit",
+    "lint:knip": "knip",
+    "generate": "node scripts/generate-catalog.ts",
+    "build:generator": "vite build --config vite.config.generator.ts"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.21",
+    "@tanstack/react-router": "^1.163.3",
+    "@tanstack/react-table": "^8.21.3",
+    "fuse.js": "^7.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "ro-crate": "^3.6.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.4",
+    "@tailwindcss/vite": "^4.2.1",
+    "@tanstack/router-plugin": "^1.164.0",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "knip": "^5.85.0",
+    "tailwindcss": "^4.2.1",
+    "typescript": "~5.9.3",
+    "vite": "^7.3.1"
+  }
+}
