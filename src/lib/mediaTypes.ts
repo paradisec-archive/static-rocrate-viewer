@@ -4,8 +4,12 @@ const audioTypes = new Set(['audio/mpeg', 'audio/wav', 'audio/vnd.wav']);
 const imageTypes = new Set(['image/jpeg', 'image/png']);
 
 export const getMediaAction = (encodingFormat: string): MediaAction => {
-  if (audioTypes.has(encodingFormat)) return 'audio';
-  if (imageTypes.has(encodingFormat)) return 'image';
+  if (audioTypes.has(encodingFormat)) {
+    return 'audio';
+  }
+  if (imageTypes.has(encodingFormat)) {
+    return 'image';
+  }
   return 'download';
 };
 

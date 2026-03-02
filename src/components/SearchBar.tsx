@@ -10,7 +10,9 @@ export function SearchBar({ initialQuery = '' }: { initialQuery?: string }) {
   }, [initialQuery]);
 
   useEffect(() => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      return;
+    }
     const timeout = setTimeout(() => {
       navigate({ to: '/search', search: { q: query } });
     }, 300);

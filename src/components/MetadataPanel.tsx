@@ -1,15 +1,23 @@
 import type { Entity } from 'ro-crate';
 
 function resolveValue(value: unknown): string {
-  if (value == null) return '';
-  if (typeof value === 'string') return value;
+  if (value == null) {
+    return '';
+  }
+  if (typeof value === 'string') {
+    return value;
+  }
   if (Array.isArray(value)) {
     return value.map(resolveValue).filter(Boolean).join(', ');
   }
   if (typeof value === 'object') {
     const obj = value as Entity;
-    if (obj.name) return resolveValue(obj.name);
-    if (obj['@id']) return String(obj['@id']);
+    if (obj.name) {
+      return resolveValue(obj.name);
+    }
+    if (obj['@id']) {
+      return String(obj['@id']);
+    }
   }
   return String(value);
 }
@@ -71,7 +79,9 @@ export function MetadataPanel({ rootDataset }: { rootDataset: Entity }) {
         {DISPLAY_FIELDS.map(([field, label]) => {
           const raw = rootDataset[field];
           const value = resolveValue(raw);
-          if (!value) return null;
+          if (!value) {
+            return null;
+          }
           return (
             <div key={field} className="px-5 py-3 sm:flex sm:gap-4">
               <dt className="text-sm font-medium text-primary-500 sm:w-40 sm:shrink-0">

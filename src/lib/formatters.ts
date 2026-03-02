@@ -1,5 +1,7 @@
 export const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 B';
+  if (bytes === 0) {
+    return '0 B';
+  }
   const units = ['B', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   const size = bytes / 1024 ** i;
@@ -13,7 +15,9 @@ export const formatDuration = (seconds: number): string => {
 };
 
 export const formatDate = (dateStr: string): string => {
-  if (!dateStr) return '';
+  if (!dateStr) {
+    return '';
+  }
   const date = new Date(dateStr);
   return date.toLocaleDateString('en-AU', {
     year: 'numeric',

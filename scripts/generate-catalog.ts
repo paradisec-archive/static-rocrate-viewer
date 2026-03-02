@@ -47,31 +47,40 @@ interface Catalog {
 }
 
 const resolveStringValue = (val: unknown): string => {
-  if (val == null) return '';
-  if (typeof val === 'string') return val;
-  if (Array.isArray(val))
+  if (val == null) {
+    return '';
+  }
+
+  if (typeof val === 'string') {
+    return val;
+  }
+
+  if (Array.isArray(val)) {
     return val.map(resolveStringValue).filter(Boolean).join(', ');
+  }
+
   if (typeof val === 'object' && val !== null) {
     const obj = val as Record<string, unknown>;
-    if (obj.name) return resolveStringValue(obj.name);
-    if (obj['@id']) return String(obj['@id']);
+    if (obj.name) {
+      return resolveStringValue(obj.name);
+    }
+
+    if (obj['@id']) {
+      return String(obj['@id']);
+    }
   }
+
   return String(val);
 };
 
 const resolveStringArray = (val: unknown): string[] => {
-  if (val == null) return [];
-  if (!Array.isArray(val)) val = [val];
-  return (val as unknown[])
-    .map((v) => {
-      if (typeof v === 'string') return v;
-      if (typeof v === 'object' && v !== null) {
-        const obj = v as Record<string, unknown>;
-        if (obj.name) return resolveStringValue(obj.name);
-      }
-      return '';
-    })
-    .filter(Boolean);
+  if (val == null) {
+    return [];
+  }
+
+  const arr = Array.isArray(val) ? val : [val];
+
+  return arr.map(resolveStringValue).filter(Boolean);
 };
 
 const findMetadataFiles = (
@@ -90,12 +99,18 @@ const findMetadataFiles = (
 
   for (const colDir of readdirSync(dataDir)) {
     const colPath = join(dataDir, colDir);
-    if (!statSync(colPath).isDirectory()) continue;
+    if (!statSync(colPath).isDirectory()) {
+      continue;
+    }
 
     for (const itemDir of readdirSync(colPath)) {
-      if (itemDir === 'pdsc_admin') continue; // Skip collection-level metadata
+      if (itemDir === 'pdsc_admin') {
+        continue; // Skip collection-level metadata
+      }
       const itemPath = join(colPath, itemDir);
-      if (!statSync(itemPath).isDirectory()) continue;
+      if (!statSync(itemPath).isDirectory()) {
+        continue;
+      }
 
       // Check pdsc_admin subdirectory first
       const pdscPath = join(itemPath, 'pdsc_admin', 'ro-crate-metadata.json');
@@ -125,7 +140,9 @@ const findMetadataFiles = (
 
 const findDoi = (rootDataset: Record<string, unknown>): string | undefined => {
   const identifiers = rootDataset.identifier;
-  if (!Array.isArray(identifiers)) return undefined;
+  if (!Array.isArray(identifiers)) {
+    return undefined;
+  }
   for (const id of identifiers) {
     if (typeof id === 'object' && id !== null) {
       const entity = id as Record<string, unknown>;
@@ -169,7 +186,9 @@ const processItem = (
     if (rawRoot?.memberOf) {
       const rawMemberOf = rawRoot.memberOf as Record<string, unknown>;
       const name = rawMemberOf.name;
-      if (typeof name === 'string' && name) collectionName = name;
+      if (typeof name === 'string' && name) {
+        collectionName = name;
+      }
     }
   }
 
@@ -178,7 +197,9 @@ const processItem = (
   const hasPart = root.hasPart;
   if (Array.isArray(hasPart)) {
     for (const part of hasPart) {
-      if (typeof part !== 'object' || part === null) continue;
+      if (typeof part !== 'object' || part === null) {
+        continue;
+      }
       const fileEntity = part as Record<string, unknown>;
 
       // Get filename from the entity
@@ -186,7 +207,9 @@ const processItem = (
         resolveStringValue(fileEntity.filename) ||
         resolveStringValue(fileEntity.name) ||
         '';
-      if (!filename) continue;
+      if (!filename) {
+        continue;
+      }
 
       // Check if file exists on disk (relative to item directory)
       const filePath = join(dataDir, collectionId, itemId, filename);
@@ -247,10 +270,17 @@ const processCollectionMetadata = (
 
   for (const colDir of readdirSync(dataDir)) {
     const colPath = join(dataDir, colDir);
-    if (!statSync(colPath).isDirectory()) continue;
+    if (!statSync(colPath).isDirectory()) {
+      continue;
+    }
 
-    const metadataPath = join(colPath, 'pdsc_admin', 'ro-crate-metadata.json');
-    if (!existsSync(metadataPath)) continue;
+    let metadataPath = join(colPath, 'pdsc_admin', 'ro-crate-metadata.json');
+    if (!existsSync(metadataPath)) {
+      metadataPath = join(colPath, 'ro-crate-metadata.json');
+      if (!existsSync(metadataPath)) {
+        continue;
+      }
+    }
 
     try {
       const json = JSON.parse(readFileSync(metadataPath, 'utf-8'));

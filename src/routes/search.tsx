@@ -17,7 +17,9 @@ function SearchPage() {
   const { q } = Route.useSearch();
   const { results, isReady } = useSearch(q ?? '');
 
-  if (!isReady) return <p className="text-primary-500">Loading...</p>;
+  if (!isReady) {
+    return <p className="text-primary-500">Loading...</p>;
+  }
 
   return (
     <div>

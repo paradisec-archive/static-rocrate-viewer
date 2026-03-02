@@ -14,12 +14,17 @@ function CollectionPage() {
   const { data: catalog, isLoading, error } = useCatalog();
   const { data: crate } = useRoCrate(collectionId);
 
-  if (isLoading) return <p className="text-primary-500">Loading...</p>;
-  if (error) return <p className="text-red-600">Error: {error.message}</p>;
+  if (isLoading) {
+    return <p className="text-primary-500">Loading...</p>;
+  }
+  if (error) {
+    return <p className="text-red-600">Error: {error.message}</p>;
+  }
 
   const collection = catalog?.collections.find((c) => c.id === collectionId);
-  if (!collection)
+  if (!collection) {
     return <p className="text-red-600">Collection not found: {collectionId}</p>;
+  }
 
   return (
     <div>

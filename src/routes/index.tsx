@@ -9,9 +9,15 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   const { data: catalog, isLoading, error } = useCatalog();
 
-  if (isLoading) return <p className="text-primary-500">Loading...</p>;
-  if (error) return <p className="text-red-600">Error: {error.message}</p>;
-  if (!catalog) return null;
+  if (isLoading) {
+    return <p className="text-primary-500">Loading...</p>;
+  }
+  if (error) {
+    return <p className="text-red-600">Error: {error.message}</p>;
+  }
+  if (!catalog) {
+    return null;
+  }
 
   const totalItems = catalog.collections.reduce(
     (sum, c) => sum + c.items.length,

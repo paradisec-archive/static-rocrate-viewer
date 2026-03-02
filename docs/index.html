@@ -858,7 +858,7 @@
       });
     }
 
-    (function () {
+    (() => {
       var slides = [
         { src: 'images/collections.jpg', caption: 'Collections' },
         { src: 'images/collection.jpg', caption: 'Collection detail' },
@@ -874,7 +874,7 @@
         current = (index + slides.length) % slides.length;
         img.src = slides[current].src;
         img.alt = slides[current].caption;
-        caption.textContent = slides[current].caption + ' (' + (current + 1) + '/' + slides.length + ')';
+        caption.textContent = `${slides[current].caption} (${current + 1}/${slides.length})`;
         lightbox.classList.add('open');
         document.body.style.overflow = 'hidden';
       }
@@ -884,25 +884,25 @@
         document.body.style.overflow = '';
       }
 
-      document.querySelectorAll('[data-lightbox]').forEach(function (el) {
-        el.addEventListener('click', function () {
+      document.querySelectorAll('[data-lightbox]').forEach((el) => {
+        el.addEventListener('click', () => {
           show(parseInt(el.getAttribute('data-lightbox'), 10));
         });
       });
 
       lightbox.querySelector('.lightbox-close').addEventListener('click', hide);
-      lightbox.querySelector('.lightbox-prev').addEventListener('click', function () { show(current - 1); });
-      lightbox.querySelector('.lightbox-next').addEventListener('click', function () { show(current + 1); });
+      lightbox.querySelector('.lightbox-prev').addEventListener('click', () => { show(current - 1); });
+      lightbox.querySelector('.lightbox-next').addEventListener('click', () => { show(current + 1); });
 
-      lightbox.addEventListener('click', function (e) {
-        if (e.target === lightbox) hide();
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) { hide(); }
       });
 
-      document.addEventListener('keydown', function (e) {
-        if (!lightbox.classList.contains('open')) return;
-        if (e.key === 'Escape') hide();
-        if (e.key === 'ArrowLeft') show(current - 1);
-        if (e.key === 'ArrowRight') show(current + 1);
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('open')) { return; }
+        if (e.key === 'Escape') { hide(); }
+        if (e.key === 'ArrowLeft') { show(current - 1); }
+        if (e.key === 'ArrowRight') { show(current + 1); }
       });
     })();
   </script>

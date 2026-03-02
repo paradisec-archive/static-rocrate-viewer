@@ -19,14 +19,19 @@ function ItemPage() {
   const collection = catalog?.collections.find((c) => c.id === collectionId);
   const item = collection?.items.find((i) => i.id === itemId);
 
-  if (isLoading) return <p className="text-primary-500">Loading...</p>;
-  if (error) return <p className="text-red-600">Error: {error.message}</p>;
-  if (!item)
+  if (isLoading) {
+    return <p className="text-primary-500">Loading...</p>;
+  }
+  if (error) {
+    return <p className="text-red-600">Error: {error.message}</p>;
+  }
+  if (!item) {
     return (
       <p className="text-red-600">
         Item not found: {collectionId}/{itemId}
       </p>
     );
+  }
 
   return (
     <div>

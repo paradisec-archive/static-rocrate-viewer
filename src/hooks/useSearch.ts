@@ -11,7 +11,9 @@ export const useSearch = (query: string) => {
   const { data: catalog } = useCatalog();
 
   const { fuse, items } = useMemo(() => {
-    if (!catalog) return { fuse: null, items: [] };
+    if (!catalog) {
+      return { fuse: null, items: [] };
+    }
 
     const searchItems: SearchItem[] = catalog.collections.flatMap((col) =>
       col.items.map((item) => ({
@@ -37,7 +39,9 @@ export const useSearch = (query: string) => {
   }, [catalog]);
 
   const results = useMemo(() => {
-    if (!fuse || !query.trim()) return items;
+    if (!fuse || !query.trim()) {
+      return items;
+    }
     return fuse.search(query).map((r) => r.item);
   }, [fuse, items, query]);
 
