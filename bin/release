@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Release script for static-rocrate-viewer
+# Bumps version in package.json, creates a git tag, and pushes to trigger the GitHub Actions release workflow.
+
+current_version=$(node -p "require('./package.json').version")
+echo "Current version: $current_version"
+
+# Determine new version
+if [ $# -eq 1 ]; then
+  new_version="$1"
+else
+  echo ""
+  echo "Usage: $0 <version>"
+  echo ""
+  echo "  version: major, minor, patch, or an explicit semver (e.g. 1.2.3)"
+  echo ""
+  echo "Examples:"
+  echo "  $0 patch    # $current_version -> next patch"
+  echo "  $0 minor    # $current_version -> next minor"
+  echo "  $0 major    # $current_version -> next major"
+  echo "  $0 2.0.0    # $current_version -> 2.0.0"
+  exit 1
+fi
+
+# Resolve bump keywords to actual version
+IFS='.' read -r major minor patch <<<"$current_version"
+case "$new_version" in
+major) new_version="$((major + 1)).0.0" ;;
+minor) new_version="$major.$((minor + 1)).0" ;;
+patch) new_version="$major.$minor.$((patch + 1))" ;;
+*)
+  if ! [[ "$new_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    echo "Error: '$new_version' is not a valid semver version or bump keyword (major, minor, patch)"
+    exit 1
+  fi
+  ;;
+esac
+
+tag="v$new_version"
+
+# Check for clean working tree
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  echo "Error: working tree is not clean. Commit or stash changes first."
+  exit 1
+fi
+
+# Check tag doesn't already exist
+if git rev-parse "$tag" >/dev/null 2>&1; then
+  echo "Error: tag $tag already exists"
+  exit 1
+fi
+
+echo "Releasing $current_version -> $new_version (tag: $tag)"
+echo ""
+
+# Run linting before release
+echo "Running lints..."
+pnpm lint
+echo ""
+
+# Update version in package.json
+node -e "
+const fs = require('fs');
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+pkg.version = '$new_version';
+fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+"
+
+# Commit and tag
+git add package.json
+git commit -m "release: v$new_version"
+git tag "$tag"
+
+echo ""
+echo "Created commit and tag $tag"
+echo ""
+echo "To publish the release, run:"
+echo ""
+echo "  git push && git push origin $tag"
+echo ""
+echo "This will trigger the GitHub Actions release workflow."
