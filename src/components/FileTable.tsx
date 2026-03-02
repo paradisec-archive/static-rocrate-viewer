@@ -48,7 +48,7 @@ const columns = [
   }),
 ];
 
-export function FileTable({ files }: { files: CatalogFile[] }) {
+export const FileTable = ({ files }: { files: CatalogFile[] }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
   const table = useReactTable({
@@ -159,4 +159,4 @@ export function FileTable({ files }: { files: CatalogFile[] }) {
       </div>
     </div>
   );
-}
+};

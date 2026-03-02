@@ -1,11 +1,11 @@
 import { Link } from '@tanstack/react-router';
 import type { CatalogCollection } from '../lib/types';
 
-export function CollectionCard({
+export const CollectionCard = ({
   collection,
 }: {
   collection: CatalogCollection;
-}) {
+}) => {
   const fileCount = collection.items.reduce(
     (sum, item) => sum + item.files.length,
     0,
@@ -41,4 +41,4 @@ export function CollectionCard({
       </div>
     </Link>
   );
-}
+};

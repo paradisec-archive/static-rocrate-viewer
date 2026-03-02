@@ -1,6 +1,6 @@
 import type { Entity } from 'ro-crate';
 
-function resolveValue(value: unknown): string {
+const resolveValue = (value: unknown): string => {
   if (value == null) {
     return '';
   }
@@ -20,7 +20,7 @@ function resolveValue(value: unknown): string {
     }
   }
   return String(value);
-}
+};
 
 const DISPLAY_FIELDS: [string, string][] = [
   ['name', 'Title'],
@@ -40,7 +40,7 @@ const DISPLAY_FIELDS: [string, string][] = [
   ['languageGenre', 'Genre'],
 ];
 
-export function MetadataPanel({ rootDataset }: { rootDataset: Entity }) {
+export const MetadataPanel = ({ rootDataset }: { rootDataset: Entity }) => {
   // Find DOI from identifiers
   const identifiers = rootDataset.identifier as unknown[];
   let doi: string | undefined;
@@ -96,4 +96,4 @@ export function MetadataPanel({ rootDataset }: { rootDataset: Entity }) {
       </dl>
     </div>
   );
-}
+};

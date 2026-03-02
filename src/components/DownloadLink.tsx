@@ -1,7 +1,7 @@
 import { formatFileSize } from '../lib/formatters';
 import { getMediaLabel } from '../lib/mediaTypes';
 
-export function DownloadLink({
+export const DownloadLink = ({
   path,
   filename,
   encodingFormat,
@@ -11,7 +11,7 @@ export function DownloadLink({
   filename: string;
   encodingFormat: string;
   contentSize: number;
-}) {
+}) => {
   return (
     <a
       href={path}
@@ -40,4 +40,4 @@ export function DownloadLink({
       </span>
     </a>
   );
-}
+};

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "Bash(pnpm lint:biome:*)",
+      "Bash(pnpm lint:types:*)"
     ]
   }
 }

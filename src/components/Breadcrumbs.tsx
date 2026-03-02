@@ -6,7 +6,7 @@ interface Crumb {
   params?: Record<string, string>;
 }
 
-export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
+export const Breadcrumbs = ({ crumbs }: { crumbs: Crumb[] }) => {
   return (
     <nav aria-label="Breadcrumb" className="mb-6 text-sm text-primary-500">
       <ol className="flex items-center gap-1">
@@ -34,4 +34,4 @@ export function Breadcrumbs({ crumbs }: { crumbs: Crumb[] }) {
       </ol>
     </nav>
   );
-}
+};

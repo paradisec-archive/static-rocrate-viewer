@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { formatDate } from '../lib/formatters';
 import type { CatalogItem } from '../lib/types';
 
-export function ItemCard({ item }: { item: CatalogItem }) {
+export const ItemCard = ({ item }: { item: CatalogItem }) => {
   return (
     <Link
       to="/collections/$collectionId/items/$itemId"
@@ -22,4 +22,4 @@ export function ItemCard({ item }: { item: CatalogItem }) {
       </div>
     </Link>
   );
-}
+};

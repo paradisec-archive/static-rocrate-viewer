@@ -1,13 +1,18 @@
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
-export function SearchBar({ initialQuery = '' }: { initialQuery?: string }) {
-  const [query, setQuery] = useState(initialQuery);
+export const SearchBar = () => {
+  const { location } = useRouterState();
+  const searchParams = new URLSearchParams(location.search);
+  const currentQuery =
+    location.pathname === '/search' ? (searchParams.get('q') ?? '') : '';
+
+  const [query, setQuery] = useState(currentQuery);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setQuery(initialQuery);
-  }, [initialQuery]);
+    setQuery(currentQuery);
+  }, [currentQuery]);
 
   useEffect(() => {
     if (!query.trim()) {
@@ -29,4 +34,4 @@ export function SearchBar({ initialQuery = '' }: { initialQuery?: string }) {
       aria-label="Search"
     />
   );
-}
+};
