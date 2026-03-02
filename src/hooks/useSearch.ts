@@ -1,7 +1,7 @@
-import Fuse from "fuse.js";
-import { useMemo } from "react";
-import type { CatalogItem } from "../lib/types";
-import { useCatalog } from "./useCatalog";
+import Fuse from 'fuse.js';
+import { useMemo } from 'react';
+import type { CatalogItem } from '../lib/types';
+import { useCatalog } from './useCatalog';
 
 interface SearchItem extends CatalogItem {
   collectionName: string;
@@ -22,12 +22,12 @@ export const useSearch = (query: string) => {
 
     const fuseInstance = new Fuse(searchItems, {
       keys: [
-        { name: "title", weight: 2 },
-        { name: "description", weight: 1 },
-        { name: "collectionName", weight: 1 },
-        { name: "languages", weight: 1 },
-        { name: "countries", weight: 1 },
-        { name: "files.filename", weight: 0.5 },
+        { name: 'title', weight: 2 },
+        { name: 'description', weight: 1 },
+        { name: 'collectionName', weight: 1 },
+        { name: 'languages', weight: 1 },
+        { name: 'countries', weight: 1 },
+        { name: 'files.filename', weight: 0.5 },
       ],
       // threshold: 0.3,
       includeMatches: true,

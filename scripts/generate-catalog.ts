@@ -5,9 +5,9 @@ import {
   readFileSync,
   statSync,
   writeFileSync,
-} from "node:fs";
-import { join, resolve } from "node:path";
-import { ROCrate } from "ro-crate";
+} from 'node:fs';
+import { join, resolve } from 'node:path';
+import { ROCrate } from 'ro-crate';
 
 interface CatalogFile {
   filename: string;
@@ -47,14 +47,14 @@ interface Catalog {
 }
 
 const resolveStringValue = (val: unknown): string => {
-  if (val == null) return "";
-  if (typeof val === "string") return val;
+  if (val == null) return '';
+  if (typeof val === 'string') return val;
   if (Array.isArray(val))
-    return val.map(resolveStringValue).filter(Boolean).join(", ");
-  if (typeof val === "object" && val !== null) {
+    return val.map(resolveStringValue).filter(Boolean).join(', ');
+  if (typeof val === 'object' && val !== null) {
     const obj = val as Record<string, unknown>;
     if (obj.name) return resolveStringValue(obj.name);
-    if (obj["@id"]) return String(obj["@id"]);
+    if (obj['@id']) return String(obj['@id']);
   }
   return String(val);
 };
@@ -64,12 +64,12 @@ const resolveStringArray = (val: unknown): string[] => {
   if (!Array.isArray(val)) val = [val];
   return (val as unknown[])
     .map((v) => {
-      if (typeof v === "string") return v;
-      if (typeof v === "object" && v !== null) {
+      if (typeof v === 'string') return v;
+      if (typeof v === 'object' && v !== null) {
         const obj = v as Record<string, unknown>;
         if (obj.name) return resolveStringValue(obj.name);
       }
-      return "";
+      return '';
     })
     .filter(Boolean);
 };
@@ -93,12 +93,12 @@ const findMetadataFiles = (
     if (!statSync(colPath).isDirectory()) continue;
 
     for (const itemDir of readdirSync(colPath)) {
-      if (itemDir === "pdsc_admin") continue; // Skip collection-level metadata
+      if (itemDir === 'pdsc_admin') continue; // Skip collection-level metadata
       const itemPath = join(colPath, itemDir);
       if (!statSync(itemPath).isDirectory()) continue;
 
       // Check pdsc_admin subdirectory first
-      const pdscPath = join(itemPath, "pdsc_admin", "ro-crate-metadata.json");
+      const pdscPath = join(itemPath, 'pdsc_admin', 'ro-crate-metadata.json');
       if (existsSync(pdscPath)) {
         results.push({
           metadataPath: pdscPath,
@@ -109,7 +109,7 @@ const findMetadataFiles = (
       }
 
       // Check item directory directly
-      const directPath = join(itemPath, "ro-crate-metadata.json");
+      const directPath = join(itemPath, 'ro-crate-metadata.json');
       if (existsSync(directPath)) {
         results.push({
           metadataPath: directPath,
@@ -127,10 +127,10 @@ const findDoi = (rootDataset: Record<string, unknown>): string | undefined => {
   const identifiers = rootDataset.identifier;
   if (!Array.isArray(identifiers)) return undefined;
   for (const id of identifiers) {
-    if (typeof id === "object" && id !== null) {
+    if (typeof id === 'object' && id !== null) {
       const entity = id as Record<string, unknown>;
       const name = entity.name;
-      if (name === "doi" || (Array.isArray(name) && name.includes("doi"))) {
+      if (name === 'doi' || (Array.isArray(name) && name.includes('doi'))) {
         return resolveStringValue(entity.value);
       }
     }
@@ -144,7 +144,7 @@ const processItem = (
   itemId: string,
   dataDir: string,
 ): { item: CatalogItem; collectionName: string; rawJson: unknown } => {
-  const json = JSON.parse(readFileSync(metadataPath, "utf-8"));
+  const json = JSON.parse(readFileSync(metadataPath, 'utf-8'));
   const crate = new ROCrate(json, { array: true, link: true });
   const root = crate.rootDataset;
 
@@ -158,18 +158,18 @@ const processItem = (
   // Derive collection name from memberOf in raw JSON
   // (link: true may strip inline properties when the entity isn't in @graph)
   let collectionName = collectionId;
-  const graph = (json as Record<string, unknown>)["@graph"] as unknown[];
+  const graph = (json as Record<string, unknown>)['@graph'] as unknown[];
   if (Array.isArray(graph)) {
     const rawRoot = graph.find(
       (e) =>
-        typeof e === "object" &&
+        typeof e === 'object' &&
         e !== null &&
-        (e as Record<string, unknown>)["@id"] === root["@id"],
+        (e as Record<string, unknown>)['@id'] === root['@id'],
     ) as Record<string, unknown> | undefined;
     if (rawRoot?.memberOf) {
       const rawMemberOf = rawRoot.memberOf as Record<string, unknown>;
       const name = rawMemberOf.name;
-      if (typeof name === "string" && name) collectionName = name;
+      if (typeof name === 'string' && name) collectionName = name;
     }
   }
 
@@ -178,14 +178,14 @@ const processItem = (
   const hasPart = root.hasPart;
   if (Array.isArray(hasPart)) {
     for (const part of hasPart) {
-      if (typeof part !== "object" || part === null) continue;
+      if (typeof part !== 'object' || part === null) continue;
       const fileEntity = part as Record<string, unknown>;
 
       // Get filename from the entity
       const filename =
         resolveStringValue(fileEntity.filename) ||
         resolveStringValue(fileEntity.name) ||
-        "";
+        '';
       if (!filename) continue;
 
       // Check if file exists on disk (relative to item directory)
@@ -249,11 +249,11 @@ const processCollectionMetadata = (
     const colPath = join(dataDir, colDir);
     if (!statSync(colPath).isDirectory()) continue;
 
-    const metadataPath = join(colPath, "pdsc_admin", "ro-crate-metadata.json");
+    const metadataPath = join(colPath, 'pdsc_admin', 'ro-crate-metadata.json');
     if (!existsSync(metadataPath)) continue;
 
     try {
-      const json = JSON.parse(readFileSync(metadataPath, "utf-8"));
+      const json = JSON.parse(readFileSync(metadataPath, 'utf-8'));
       const crate = new ROCrate(json, { array: true, link: true });
       const root = crate.rootDataset;
 
@@ -280,14 +280,14 @@ const processCollectionMetadata = (
 
 const main = () => {
   const args = process.argv.slice(2);
-  let dataDir = "./data";
-  let outputDir = "./public";
+  let dataDir = './data';
+  let outputDir = './public';
 
   for (let i = 0; i < args.length; i++) {
-    if (args[i] === "--data-dir" && args[i + 1]) {
+    if (args[i] === '--data-dir' && args[i + 1]) {
       dataDir = args[i + 1];
       i++;
-    } else if (args[i] === "--output-dir" && args[i + 1]) {
+    } else if (args[i] === '--output-dir' && args[i + 1]) {
       outputDir = args[i + 1];
       i++;
     }
@@ -304,7 +304,7 @@ const main = () => {
 
   const metadataFiles = findMetadataFiles(dataDir);
   if (metadataFiles.length === 0) {
-    console.error("No RO-Crate metadata files found");
+    console.error('No RO-Crate metadata files found');
     process.exit(1);
   }
 
@@ -378,19 +378,19 @@ const main = () => {
 
   // Write catalog.js
   const catalogJs = `window.__ROCRATE_VIEWER_CATALOG__ = ${JSON.stringify(catalog, null, 2)};\n`;
-  writeFileSync(join(outputDir, "catalog.js"), catalogJs);
+  writeFileSync(join(outputDir, 'catalog.js'), catalogJs);
   console.error(
     `Wrote catalog.js (${collections.length} collections, ${metadataFiles.length} items)`,
   );
 
   // Write rocrate-data.js
   const rocrateJs = `window.__ROCRATE_VIEWER_DATA__ = ${JSON.stringify(rocrateData)};\n`;
-  writeFileSync(join(outputDir, "rocrate-data.js"), rocrateJs);
+  writeFileSync(join(outputDir, 'rocrate-data.js'), rocrateJs);
   console.error(
     `Wrote rocrate-data.js (${Object.keys(rocrateData).length} entries)`,
   );
 
-  console.error("Done!");
+  console.error('Done!');
 };
 
 main();

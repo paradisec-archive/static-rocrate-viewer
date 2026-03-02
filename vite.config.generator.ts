@@ -1,13 +1,13 @@
-import { defineConfig } from "vite";
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
     lib: {
-      entry: "scripts/generate-catalog.ts",
-      formats: ["es"],
-      fileName: "generate-catalog",
+      entry: 'scripts/generate-catalog.ts',
+      formats: ['es'],
+      fileName: 'generate-catalog',
     },
-    outDir: "dist",
+    outDir: 'dist',
     emptyOutDir: false,
     rollupOptions: {
       external: [/^node:/],

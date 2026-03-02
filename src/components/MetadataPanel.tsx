@@ -1,35 +1,35 @@
-import type { Entity } from "ro-crate";
+import type { Entity } from 'ro-crate';
 
 function resolveValue(value: unknown): string {
-  if (value == null) return "";
-  if (typeof value === "string") return value;
+  if (value == null) return '';
+  if (typeof value === 'string') return value;
   if (Array.isArray(value)) {
-    return value.map(resolveValue).filter(Boolean).join(", ");
+    return value.map(resolveValue).filter(Boolean).join(', ');
   }
-  if (typeof value === "object") {
+  if (typeof value === 'object') {
     const obj = value as Entity;
     if (obj.name) return resolveValue(obj.name);
-    if (obj["@id"]) return String(obj["@id"]);
+    if (obj['@id']) return String(obj['@id']);
   }
   return String(value);
 }
 
 const DISPLAY_FIELDS: [string, string][] = [
-  ["name", "Title"],
-  ["description", "Description"],
-  ["dateCreated", "Date Created"],
-  ["dateModified", "Date Modified"],
-  ["originatedOn", "Originated On"],
-  ["inLanguage", "Languages"],
-  ["subjectLanguages", "Subject Languages"],
-  ["countries", "Countries"],
-  ["contentLocation", "Location"],
-  ["publisher", "Publisher"],
-  ["recorder", "Recorder"],
-  ["speaker", "Speakers"],
-  ["license", "Licence"],
-  ["languageAsGiven", "Language (as given)"],
-  ["languageGenre", "Genre"],
+  ['name', 'Title'],
+  ['description', 'Description'],
+  ['dateCreated', 'Date Created'],
+  ['dateModified', 'Date Modified'],
+  ['originatedOn', 'Originated On'],
+  ['inLanguage', 'Languages'],
+  ['subjectLanguages', 'Subject Languages'],
+  ['countries', 'Countries'],
+  ['contentLocation', 'Location'],
+  ['publisher', 'Publisher'],
+  ['recorder', 'Recorder'],
+  ['speaker', 'Speakers'],
+  ['license', 'Licence'],
+  ['languageAsGiven', 'Language (as given)'],
+  ['languageGenre', 'Genre'],
 ];
 
 export function MetadataPanel({ rootDataset }: { rootDataset: Entity }) {
@@ -40,8 +40,8 @@ export function MetadataPanel({ rootDataset }: { rootDataset: Entity }) {
     for (const id of identifiers) {
       const entity = id as Entity;
       if (
-        entity?.name === "doi" ||
-        (Array.isArray(entity?.name) && entity.name.includes("doi"))
+        entity?.name === 'doi' ||
+        (Array.isArray(entity?.name) && entity.name.includes('doi'))
       ) {
         doi = resolveValue(entity.value);
       }

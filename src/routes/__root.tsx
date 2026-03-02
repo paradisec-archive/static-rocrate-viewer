@@ -3,8 +3,8 @@ import {
   Link,
   Outlet,
   useRouterState,
-} from "@tanstack/react-router";
-import { SearchBar } from "../components/SearchBar";
+} from '@tanstack/react-router';
+import { SearchBar } from '../components/SearchBar';
 
 export const Route = createRootRoute({
   component: RootLayout,
@@ -16,7 +16,7 @@ function RootLayout() {
     location.search as unknown as string,
   );
   const currentQuery =
-    location.pathname === "/search" ? (searchParams.get("q") ?? "") : "";
+    location.pathname === '/search' ? (searchParams.get('q') ?? '') : '';
 
   return (
     <div className="min-h-screen bg-primary-50">

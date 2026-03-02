@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { formatDate } from "../lib/formatters";
-import type { CatalogItem } from "../lib/types";
+import { Link } from '@tanstack/react-router';
+import { formatDate } from '../lib/formatters';
+import type { CatalogItem } from '../lib/types';
 
 export function ItemCard({ item }: { item: CatalogItem }) {
   return (
@@ -17,7 +17,7 @@ export function ItemCard({ item }: { item: CatalogItem }) {
       )}
       <div className="mt-3 flex flex-wrap gap-3 text-xs text-primary-500">
         {item.dateCreated && <span>{formatDate(item.dateCreated)}</span>}
-        {item.languages.length > 0 && <span>{item.languages.join(", ")}</span>}
+        {item.languages.length > 0 && <span>{item.languages.join(', ')}</span>}
         <span>{item.files.length} files</span>
       </div>
     </Link>

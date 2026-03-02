@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import type { CatalogCollection } from "../lib/types";
+import { Link } from '@tanstack/react-router';
+import type { CatalogCollection } from '../lib/types';
 
 export function CollectionCard({
   collection,
@@ -31,12 +31,12 @@ export function CollectionCard({
         <span>{fileCount} files</span>
         {collection.languages.length > 0 && (
           <span>
-            {collection.languages.slice(0, 3).join(", ")}
-            {collection.languages.length > 3 ? "…" : ""}
+            {collection.languages.slice(0, 3).join(', ')}
+            {collection.languages.length > 3 ? '…' : ''}
           </span>
         )}
         {collection.countries.length > 0 && (
-          <span>{collection.countries.join(", ")}</span>
+          <span>{collection.countries.join(', ')}</span>
         )}
       </div>
     </Link>

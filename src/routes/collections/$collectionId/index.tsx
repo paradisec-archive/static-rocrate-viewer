@@ -1,11 +1,11 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Breadcrumbs } from "../../../components/Breadcrumbs";
-import { ItemCard } from "../../../components/ItemCard";
-import { MetadataPanel } from "../../../components/MetadataPanel";
-import { useCatalog } from "../../../hooks/useCatalog";
-import { useRoCrate } from "../../../hooks/useRoCrate";
+import { createFileRoute } from '@tanstack/react-router';
+import { Breadcrumbs } from '../../../components/Breadcrumbs';
+import { ItemCard } from '../../../components/ItemCard';
+import { MetadataPanel } from '../../../components/MetadataPanel';
+import { useCatalog } from '../../../hooks/useCatalog';
+import { useRoCrate } from '../../../hooks/useRoCrate';
 
-export const Route = createFileRoute("/collections/$collectionId/")({
+export const Route = createFileRoute('/collections/$collectionId/')({
   component: CollectionPage,
 });
 
@@ -30,10 +30,10 @@ function CollectionPage() {
         <div className="mt-2 flex flex-wrap gap-3 text-sm text-primary-500">
           <span>{collection.items.length} items</span>
           {collection.languages.length > 0 && (
-            <span>{collection.languages.join(", ")}</span>
+            <span>{collection.languages.join(', ')}</span>
           )}
           {collection.countries.length > 0 && (
-            <span>{collection.countries.join(", ")}</span>
+            <span>{collection.countries.join(', ')}</span>
           )}
         </div>
       </div>

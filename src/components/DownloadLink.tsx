@@ -1,5 +1,5 @@
-import { formatFileSize } from "../lib/formatters";
-import { getMediaLabel } from "../lib/mediaTypes";
+import { formatFileSize } from '../lib/formatters';
+import { getMediaLabel } from '../lib/mediaTypes';
 
 export function DownloadLink({
   path,

@@ -5,45 +5,45 @@ import {
   getSortedRowModel,
   type SortingState,
   useReactTable,
-} from "@tanstack/react-table";
-import { useState } from "react";
-import { formatDuration, formatFileSize } from "../lib/formatters";
+} from '@tanstack/react-table';
+import { useState } from 'react';
+import { formatDuration, formatFileSize } from '../lib/formatters';
 import {
   getMediaAction,
   getMediaLabel,
   isPlayableAudio,
-} from "../lib/mediaTypes";
-import type { CatalogFile } from "../lib/types";
-import { AudioPlayer } from "./AudioPlayer";
-import { DownloadLink } from "./DownloadLink";
-import { ImageViewer } from "./ImageViewer";
+} from '../lib/mediaTypes';
+import type { CatalogFile } from '../lib/types';
+import { AudioPlayer } from './AudioPlayer';
+import { DownloadLink } from './DownloadLink';
+import { ImageViewer } from './ImageViewer';
 
 const columnHelper = createColumnHelper<CatalogFile>();
 
 const columns = [
-  columnHelper.accessor("filename", {
-    header: "Filename",
+  columnHelper.accessor('filename', {
+    header: 'Filename',
     cell: (info) => (
       <span className="font-mono text-sm">{info.getValue()}</span>
     ),
   }),
-  columnHelper.accessor("encodingFormat", {
-    header: "Type",
+  columnHelper.accessor('encodingFormat', {
+    header: 'Type',
     cell: (info) => (
       <span className="text-sm">{getMediaLabel(info.getValue())}</span>
     ),
   }),
-  columnHelper.accessor("contentSize", {
-    header: "Size",
+  columnHelper.accessor('contentSize', {
+    header: 'Size',
     cell: (info) => (
       <span className="text-sm">{formatFileSize(info.getValue())}</span>
     ),
   }),
-  columnHelper.accessor("duration", {
-    header: "Duration",
+  columnHelper.accessor('duration', {
+    header: 'Duration',
     cell: (info) => {
       const val = info.getValue();
-      return <span className="text-sm">{val ? formatDuration(val) : "—"}</span>;
+      return <span className="text-sm">{val ? formatDuration(val) : '—'}</span>;
     },
   }),
 ];
@@ -63,12 +63,12 @@ export function FileTable({ files }: { files: CatalogFile[] }) {
   // Separate media for inline display
   const playableAudio = files.filter((f) => isPlayableAudio(f.encodingFormat));
   const images = files.filter(
-    (f) => getMediaAction(f.encodingFormat) === "image",
+    (f) => getMediaAction(f.encodingFormat) === 'image',
   );
   const downloads = files.filter(
     (f) =>
-      getMediaAction(f.encodingFormat) === "download" ||
-      (getMediaAction(f.encodingFormat) === "audio" &&
+      getMediaAction(f.encodingFormat) === 'download' ||
+      (getMediaAction(f.encodingFormat) === 'audio' &&
         !isPlayableAudio(f.encodingFormat)),
   );
 
@@ -131,9 +131,9 @@ export function FileTable({ files }: { files: CatalogFile[] }) {
                           header.column.columnDef.header,
                           header.getContext(),
                         )}
-                        {{ asc: " ▲", desc: " ▼" }[
+                        {{ asc: ' ▲', desc: ' ▼' }[
                           header.column.getIsSorted() as string
-                        ] ?? ""}
+                        ] ?? ''}
                       </div>
                     </th>
                   ))}

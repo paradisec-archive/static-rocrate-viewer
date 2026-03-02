@@ -1,12 +1,12 @@
-declare module "ro-crate" {
+declare module 'ro-crate' {
   interface ROCrateOptions {
     array?: boolean;
     link?: boolean;
   }
 
   interface Entity {
-    "@id": string;
-    "@type": string | string[];
+    '@id': string;
+    '@type': string | string[];
     name?: string | string[];
     description?: string | string[];
     [key: string]: unknown;

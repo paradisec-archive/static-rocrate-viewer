@@ -1,7 +1,7 @@
-import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useNavigate } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
 
-export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
+export function SearchBar({ initialQuery = '' }: { initialQuery?: string }) {
   const [query, setQuery] = useState(initialQuery);
   const navigate = useNavigate();
 
@@ -12,7 +12,7 @@ export function SearchBar({ initialQuery = "" }: { initialQuery?: string }) {
   useEffect(() => {
     if (!query.trim()) return;
     const timeout = setTimeout(() => {
-      navigate({ to: "/search", search: { q: query } });
+      navigate({ to: '/search', search: { q: query } });
     }, 300);
     return () => clearTimeout(timeout);
   }, [query, navigate]);

@@ -1,12 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Breadcrumbs } from "../../../../components/Breadcrumbs";
-import { FileTable } from "../../../../components/FileTable";
-import { MetadataPanel } from "../../../../components/MetadataPanel";
-import { useCatalog } from "../../../../hooks/useCatalog";
-import { useRoCrate } from "../../../../hooks/useRoCrate";
+import { createFileRoute } from '@tanstack/react-router';
+import { Breadcrumbs } from '../../../../components/Breadcrumbs';
+import { FileTable } from '../../../../components/FileTable';
+import { MetadataPanel } from '../../../../components/MetadataPanel';
+import { useCatalog } from '../../../../hooks/useCatalog';
+import { useRoCrate } from '../../../../hooks/useRoCrate';
 
 export const Route = createFileRoute(
-  "/collections/$collectionId/items/$itemId",
+  '/collections/$collectionId/items/$itemId',
 )({
   component: ItemPage,
 });
@@ -34,7 +34,7 @@ function ItemPage() {
         crumbs={[
           {
             label: collectionId,
-            to: "/collections/$collectionId",
+            to: '/collections/$collectionId',
             params: { collectionId },
           },
           { label: itemId },
