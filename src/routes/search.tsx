@@ -8,7 +8,7 @@ interface SearchParams {
 
 export const Route = createFileRoute('/search')({
   validateSearch: (search: Record<string, unknown>): SearchParams => ({
-    q: (search.q as string) ?? '',
+    q: String(search.q ?? ''),
   }),
   component: SearchPage,
 });
@@ -26,6 +26,7 @@ function SearchPage() {
       <h1 className="mb-4 text-2xl font-bold text-primary-900">
         {q ? `Search results for "${q}"` : 'All items'}
       </h1>
+
       {results.length === 0 ? (
         <p className="text-primary-500">No results found.</p>
       ) : (

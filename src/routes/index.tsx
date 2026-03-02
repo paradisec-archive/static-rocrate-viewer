@@ -32,11 +32,13 @@ function HomePage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-primary-900">Collections</h1>
+
         <p className="mt-1 text-sm text-primary-500">
           {catalog.collections.length} collections, {totalItems} items,{' '}
           {totalFiles} files
         </p>
       </div>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {catalog.collections.map((collection) => (
           <CollectionCard key={collection.id} collection={collection} />
