@@ -1,5 +1,7 @@
 # Static RO-Crate Viewer
 
+**[View the showcase site](https://paradisec-archive.github.io/static-rocrate-viewer/)**
+
 A static web application for browsing [RO-Crate](https://www.researchobject.org/ro-crate/) archives. Works by double-clicking `index.html` (file:// protocol)
 
 ## Features
