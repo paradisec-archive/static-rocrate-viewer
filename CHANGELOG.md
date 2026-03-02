@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v1.1.0...v1.2.0) (2026-03-02)
+
+
+### Features
+
+* update to Node.js 24 ([67f4ac6](https://github.com/paradisec-archive/static-rocrate-viewer/commit/67f4ac62d49f135fecdc5eb84b6f1abe4361dbf7))
+
 # [1.1.0](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v1.0.1...v1.1.0) (2026-03-02)
 
 
