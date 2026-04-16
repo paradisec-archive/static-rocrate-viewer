@@ -1,0 +1,10 @@
+# Supply chain security
+# https://pnpm.io/supply-chain-security
+strictDepBuilds: true
+blockExoticSubdeps: true
+minimumReleaseAge: 4320 # 3 days
+trustPolicy: no-downgrade
+
+allowBuilds:
+  lefthook: true # git hooks manager, needs postinstall to sync hooks
+  esbuild: true # JS bundler used by Vite, needs postinstall for platform binary
