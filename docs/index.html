@@ -27,6 +27,9 @@
       --primary-800: oklch(0.34 0.1 250);
       --primary-900: oklch(0.28 0.08 250);
       --primary-950: oklch(0.2 0.06 250);
+      --warning-50: oklch(0.97 0.02 80);
+      --warning-100: oklch(0.9 0.05 80);
+      --warning-800: oklch(0.4 0.1 60);
       --white: #fff;
       --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -385,24 +388,24 @@
       margin-bottom: 12px;
     }
 
-    .prereqs-box ul {
+    .dot-list {
       list-style: none;
       padding: 0;
     }
 
-    .prereqs-box li {
-      font-size: 0.875rem;
+    .dot-list li {
+      font-size: 0.9rem;
       color: var(--primary-700);
-      padding: 4px 0;
-      padding-left: 20px;
+      padding: 4px 0 4px 20px;
       position: relative;
+      line-height: 1.55;
     }
 
-    .prereqs-box li::before {
+    .dot-list li::before {
       content: "";
       position: absolute;
       left: 0;
-      top: 11px;
+      top: 12px;
       width: 6px;
       height: 6px;
       border-radius: 50%;
@@ -433,6 +436,10 @@
       font-size: 0.9rem;
       color: var(--primary-700);
       line-height: 1.6;
+    }
+
+    .install-note p + p {
+      margin-top: 12px;
     }
 
     .install-note strong {
@@ -501,6 +508,67 @@
       padding: 2px 7px;
       border-radius: 4px;
       color: var(--primary-800);
+    }
+
+    /* ── Detailed Guide ──────────────────────── */
+
+    .detailed-guide {
+      background: var(--white);
+    }
+
+    .guide-steps {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .guide-step {
+      margin-bottom: 48px;
+    }
+
+    .guide-step:last-child {
+      margin-bottom: 0;
+    }
+
+    .guide-step-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .guide-step-header h3,
+    .guide-step > h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--primary-900);
+      margin-bottom: 16px;
+    }
+
+    .guide-step p {
+      font-size: 0.925rem;
+      color: var(--primary-700);
+      line-height: 1.65;
+      margin-bottom: 12px;
+    }
+
+    .guide-step .code-wrapper {
+      margin-bottom: 16px;
+    }
+
+    .step-number-sm {
+      width: 36px;
+      height: 36px;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .install-note.guide-warning {
+      background: var(--warning-50);
+      border-color: var(--warning-100);
+    }
+
+    .install-note.guide-warning strong {
+      color: var(--warning-800);
     }
 
     /* ── Footer ──────────────────────────────── */
@@ -767,7 +835,7 @@
         <div class="prereqs">
           <div class="prereqs-box">
             <h3>Prerequisites</h3>
-            <ul>
+            <ul class="dot-list">
               <li><code>bash</code></li>
               <li><code>curl</code></li>
               <li><code>tar</code></li>
@@ -787,7 +855,8 @@
         </div>
 
         <div class="install-note">
-          <strong>What does the install script do?</strong> It downloads the latest release tarball, extracts the pre-built viewer files, and runs the catalog generator against your <code>data/</code> directory to produce the static browse and search indexes.
+          <p><strong>What does the install script do?</strong> It downloads the latest release tarball, extracts the pre-built viewer files, and runs the catalog generator against your <code>data/</code> directory to produce the static browse and search indexes.</p>
+          <p><strong>Need more detail?</strong> See the <a href="#guide">step-by-step guide</a> below for a complete walkthrough with examples.</p>
         </div>
       </div>
     </div>
@@ -816,6 +885,138 @@
           <h3>Open in your browser</h3>
           <p>Double-click <code>index.html</code> — no server needed</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Detailed Guide -->
+  <section class="detailed-guide" id="guide">
+    <div class="container">
+      <div class="section-heading">
+        <h2>Step-by-Step Guide</h2>
+        <p>A detailed walkthrough for setting up the viewer with your data</p>
+      </div>
+
+      <div class="guide-steps">
+
+        <!-- Prerequisites -->
+        <div class="guide-step">
+          <h3>Prerequisites</h3>
+          <p>Before you begin, you need <strong>Node.js</strong> (version 20 or later) installed on your computer. If you don't have it, visit <a href="https://nodejs.org/">nodejs.org</a> and download the <strong>LTS</strong> version — it includes everything you need.</p>
+          <p>You also need <code>curl</code> and <code>tar</code>, which come pre-installed on macOS and Linux.</p>
+          <div class="install-note guide-warning">
+            <strong>Windows users:</strong> The install script requires a Unix-like terminal. Install <a href="https://learn.microsoft.com/en-us/windows/wsl/install">WSL (Windows Subsystem for Linux)</a> or use <a href="https://gitforwindows.org/">Git Bash</a>, then follow the steps below from that terminal. You will also need to install Node.js inside WSL if you go that route.
+          </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="guide-step">
+          <div class="guide-step-header">
+            <div class="step-number step-number-sm">1</div>
+            <h3>Create a working directory</h3>
+          </div>
+          <p>Create a new folder where the viewer and your data will live together. Open a terminal and run:</p>
+          <div class="code-wrapper">
+            <code>mkdir ~/my-archive
+cd ~/my-archive</code>
+          </div>
+          <p>You can name this folder anything you like and put it anywhere. The installer will place the viewer files directly into this directory.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="guide-step">
+          <div class="guide-step-header">
+            <div class="step-number step-number-sm">2</div>
+            <h3>Organise your data</h3>
+          </div>
+          <p>Place your RO-Crate data inside a <code>data/</code> folder within your working directory. The viewer expects a two-level hierarchy: <strong>collections</strong> contain <strong>items</strong>, and each item has a metadata file alongside its media files.</p>
+          <p>Here's a concrete example with two collections:</p>
+          <div class="code-wrapper">
+            <code>my-archive/
+└── data/
+    ├── NT1/                            ← Collection folder
+    │   ├── ro-crate-metadata.json      ← Collection metadata (optional)
+    │   ├── 001/                        ← Item folder
+    │   │   ├── ro-crate-metadata.json  ← Item metadata
+    │   │   ├── NT1-001-001A.mp3        ← Audio recording
+    │   │   └── NT1-001-001A.jpg        ← Image
+    │   └── 002/                        ← Another item
+    │       ├── ro-crate-metadata.json
+    │       └── NT1-002-001A.mp3
+    └── AC1/                            ← Another collection
+        ├── ro-crate-metadata.json
+        └── 001/
+            ├── ro-crate-metadata.json
+            └── AC1-001.wav</code>
+          </div>
+          <ul class="dot-list">
+            <li>Each <strong>collection</strong> is a folder directly inside <code>data/</code> (e.g. <code>NT1</code>, <code>AC1</code>)</li>
+            <li>Each <strong>item</strong> is a subfolder within a collection (e.g. <code>001</code>, <code>002</code>)</li>
+            <li>Every item folder must contain a <code>ro-crate-metadata.json</code> file</li>
+            <li>Collection-level <code>ro-crate-metadata.json</code> is optional but recommended — it provides the collection name and description shown in the viewer</li>
+            <li>Media files (audio, images, video, transcripts) go alongside the metadata in each item folder</li>
+          </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="guide-step">
+          <div class="guide-step-header">
+            <div class="step-number step-number-sm">3</div>
+            <h3>Run the installer</h3>
+          </div>
+          <p>From inside your working directory, run the install command:</p>
+          <div class="code-wrapper">
+            <code>curl -fsSL https://github.com/paradisec-archive/static-rocrate-viewer/releases/latest/download/install.sh | bash</code>
+          </div>
+          <p>This command does three things:</p>
+          <ul class="dot-list">
+            <li><strong>Downloads</strong> the latest viewer release from GitHub</li>
+            <li><strong>Extracts</strong> the viewer files into your working directory</li>
+            <li><strong>Generates</strong> a searchable catalog from your <code>ro-crate-metadata.json</code> files</li>
+          </ul>
+          <p>After it finishes, your directory will look like this:</p>
+          <div class="code-wrapper">
+            <code>my-archive/
+├── data/                ← Your data (unchanged)
+├── index.html           ← Open this in your browser
+├── catalog.js           ← Generated search index
+├── rocrate-data.js      ← Generated metadata
+├── generate-catalog.js  ← Catalog generator script
+└── assets/              ← Viewer CSS and JavaScript</code>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="guide-step">
+          <div class="guide-step-header">
+            <div class="step-number step-number-sm">4</div>
+            <h3>View your archive</h3>
+          </div>
+          <p>Open <code>index.html</code> in your web browser. The easiest way is to double-click it in your file manager. From the terminal, you can run:</p>
+          <div class="code-wrapper">
+            <code># macOS
+open index.html
+
+# Linux
+xdg-open index.html</code>
+          </div>
+          <p>The viewer works in all modern browsers — Chrome, Firefox, Safari, and Edge. No web server is required; it runs directly from the file on your computer.</p>
+        </div>
+
+        <!-- Sharing -->
+        <div class="guide-step">
+          <div class="guide-step-header">
+            <div class="step-number step-number-sm">5</div>
+            <h3>Share your archive</h3>
+          </div>
+          <p>To share your browsable archive with others:</p>
+          <ul class="dot-list">
+            <li><strong>Zip it:</strong> Compress the entire <code>my-archive/</code> folder into a ZIP file. The recipient unzips it and opens <code>index.html</code> — no installation needed on their end</li>
+            <li><strong>USB drive:</strong> Copy the folder to a USB stick for offline distribution</li>
+            <li><strong>Web server:</strong> To host it online, serve the folder with any HTTP server, e.g. <code>python3 -m http.server 8080</code></li>
+          </ul>
+        </div>
+
       </div>
     </div>
   </section>
