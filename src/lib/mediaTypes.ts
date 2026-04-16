@@ -13,8 +13,7 @@ export const getMediaAction = (encodingFormat: string): MediaAction => {
   return 'download';
 };
 
-export const isPlayableAudio = (encodingFormat: string): boolean =>
-  encodingFormat === 'audio/mpeg';
+export const isPlayableAudio = (encodingFormat: string): boolean => encodingFormat === 'audio/mpeg';
 
 export const getMediaLabel = (encodingFormat: string): string => {
   const labels: Record<string, string> = {

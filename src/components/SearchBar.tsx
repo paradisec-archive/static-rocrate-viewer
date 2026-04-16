@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 export const SearchBar = () => {
   const { location } = useRouterState();
   const searchParams = new URLSearchParams(location.search);
-  const currentQuery =
-    location.pathname === '/search' ? (searchParams.get('q') ?? '') : '';
+  const currentQuery = location.pathname === '/search' ? (searchParams.get('q') ?? '') : '';
 
   const [query, setQuery] = useState(currentQuery);
   const navigate = useNavigate();

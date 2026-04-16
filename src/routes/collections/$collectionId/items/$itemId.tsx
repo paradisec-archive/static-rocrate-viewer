@@ -5,9 +5,7 @@ import { MetadataPanel } from '../../../../components/MetadataPanel';
 import { useCatalog } from '../../../../hooks/useCatalog';
 import { useRoCrate } from '../../../../hooks/useRoCrate';
 
-export const Route = createFileRoute(
-  '/collections/$collectionId/items/$itemId',
-)({
+export const Route = createFileRoute('/collections/$collectionId/items/$itemId')({
   component: ItemPage,
 });
 

@@ -19,14 +19,8 @@ function HomePage() {
     return null;
   }
 
-  const totalItems = catalog.collections.reduce(
-    (sum, c) => sum + c.items.length,
-    0,
-  );
-  const totalFiles = catalog.collections.reduce(
-    (sum, c) => sum + c.items.reduce((s, i) => s + i.files.length, 0),
-    0,
-  );
+  const totalItems = catalog.collections.reduce((sum, c) => sum + c.items.length, 0);
+  const totalFiles = catalog.collections.reduce((sum, c) => sum + c.items.reduce((s, i) => s + i.files.length, 0), 0);
 
   return (
     <div>
@@ -34,8 +28,7 @@ function HomePage() {
         <h1 className="text-2xl font-bold text-primary-900">Collections</h1>
 
         <p className="mt-1 text-sm text-primary-500">
-          {catalog.collections.length} collections, {totalItems} items,{' '}
-          {totalFiles} files
+          {catalog.collections.length} collections, {totalItems} items, {totalFiles} files
         </p>
       </div>
 

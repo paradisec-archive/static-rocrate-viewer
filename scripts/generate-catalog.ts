@@ -1,11 +1,4 @@
-import {
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  statSync,
-  writeFileSync,
-} from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { ROCrate } from 'ro-crate';
 
@@ -83,9 +76,7 @@ const resolveStringArray = (val: unknown): string[] => {
   return arr.map(resolveStringValue).filter(Boolean);
 };
 
-const findMetadataFiles = (
-  dataDir: string,
-): { metadataPath: string; collectionId: string; itemId: string }[] => {
+const findMetadataFiles = (dataDir: string): { metadataPath: string; collectionId: string; itemId: string }[] => {
   const results: {
     metadataPath: string;
     collectionId: string;
@@ -177,12 +168,9 @@ const processItem = (
   let collectionName = collectionId;
   const graph = (json as Record<string, unknown>)['@graph'] as unknown[];
   if (Array.isArray(graph)) {
-    const rawRoot = graph.find(
-      (e) =>
-        typeof e === 'object' &&
-        e !== null &&
-        (e as Record<string, unknown>)['@id'] === root['@id'],
-    ) as Record<string, unknown> | undefined;
+    const rawRoot = graph.find((e) => typeof e === 'object' && e !== null && (e as Record<string, unknown>)['@id'] === root['@id']) as
+      | Record<string, unknown>
+      | undefined;
     if (rawRoot?.memberOf) {
       const rawMemberOf = rawRoot.memberOf as Record<string, unknown>;
       const name = rawMemberOf.name;
@@ -203,10 +191,7 @@ const processItem = (
       const fileEntity = part as Record<string, unknown>;
 
       // Get filename from the entity
-      const filename =
-        resolveStringValue(fileEntity.filename) ||
-        resolveStringValue(fileEntity.name) ||
-        '';
+      const filename = resolveStringValue(fileEntity.filename) || resolveStringValue(fileEntity.name) || '';
       if (!filename) {
         continue;
       }
@@ -221,8 +206,7 @@ const processItem = (
       const relativePath = `data/${collectionId}/${itemId}/${filename}`;
       const encodingFormat = resolveStringValue(fileEntity.encodingFormat);
       const contentSize = Number(fileEntity.contentSize) || 0;
-      const duration =
-        fileEntity.duration != null ? Number(fileEntity.duration) : undefined;
+      const duration = fileEntity.duration != null ? Number(fileEntity.duration) : undefined;
       const fileDoi = resolveStringValue(fileEntity.doi) || undefined;
 
       files.push({
@@ -263,9 +247,7 @@ interface CollectionMeta {
   rawJson: unknown;
 }
 
-const processCollectionMetadata = (
-  dataDir: string,
-): Map<string, CollectionMeta> => {
+const processCollectionMetadata = (dataDir: string): Map<string, CollectionMeta> => {
   const results = new Map<string, CollectionMeta>();
 
   for (const colDir of readdirSync(dataDir)) {
@@ -299,9 +281,7 @@ const processCollectionMetadata = (
 
       console.error(`  Found collection metadata: ${colDir}`);
     } catch (err) {
-      console.error(
-        `  Error reading collection metadata ${metadataPath}: ${err}`,
-      );
+      console.error(`  Error reading collection metadata ${metadataPath}: ${err}`);
     }
   }
 
@@ -351,12 +331,7 @@ const main = () => {
 
   for (const { metadataPath, collectionId, itemId } of metadataFiles) {
     try {
-      const { item, collectionName, rawJson } = processItem(
-        metadataPath,
-        collectionId,
-        itemId,
-        dataDir,
-      );
+      const { item, collectionName, rawJson } = processItem(metadataPath, collectionId, itemId, dataDir);
 
       if (!collectionItemsMap.has(collectionId)) {
         collectionItemsMap.set(collectionId, []);
@@ -374,18 +349,14 @@ const main = () => {
 
       rocrateData[`${collectionId}/${itemId}`] = rawJson;
 
-      console.error(
-        `  Processed ${collectionId}/${itemId}: ${item.title} (${item.files.length} files)`,
-      );
+      console.error(`  Processed ${collectionId}/${itemId}: ${item.title} (${item.files.length} files)`);
     } catch (err) {
       console.error(`  Error processing ${metadataPath}: ${err}`);
     }
   }
 
   // Build catalog
-  const collections: CatalogCollection[] = Array.from(
-    collectionItemsMap.entries(),
-  )
+  const collections: CatalogCollection[] = Array.from(collectionItemsMap.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([id, items]) => {
       const meta = collectionMeta.get(id);
@@ -409,16 +380,12 @@ const main = () => {
   // Write catalog.js
   const catalogJs = `window.__ROCRATE_VIEWER_CATALOG__ = ${JSON.stringify(catalog, null, 2)};\n`;
   writeFileSync(join(outputDir, 'catalog.js'), catalogJs);
-  console.error(
-    `Wrote catalog.js (${collections.length} collections, ${metadataFiles.length} items)`,
-  );
+  console.error(`Wrote catalog.js (${collections.length} collections, ${metadataFiles.length} items)`);
 
   // Write rocrate-data.js
   const rocrateJs = `window.__ROCRATE_VIEWER_DATA__ = ${JSON.stringify(rocrateData)};\n`;
   writeFileSync(join(outputDir, 'rocrate-data.js'), rocrateJs);
-  console.error(
-    `Wrote rocrate-data.js (${Object.keys(rocrateData).length} entries)`,
-  );
+  console.error(`Wrote rocrate-data.js (${Object.keys(rocrateData).length} entries)`);
 
   console.error('Done!');
 };

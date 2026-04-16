@@ -34,12 +34,8 @@ function CollectionPage() {
         <p className="mt-1 text-lg text-primary-600">{collection.name}</p>
         <div className="mt-2 flex flex-wrap gap-3 text-sm text-primary-500">
           <span>{collection.items.length} items</span>
-          {collection.languages.length > 0 && (
-            <span>{collection.languages.join(', ')}</span>
-          )}
-          {collection.countries.length > 0 && (
-            <span>{collection.countries.join(', ')}</span>
-          )}
+          {collection.languages.length > 0 && <span>{collection.languages.join(', ')}</span>}
+          {collection.countries.length > 0 && <span>{collection.countries.join(', ')}</span>}
         </div>
       </div>
 

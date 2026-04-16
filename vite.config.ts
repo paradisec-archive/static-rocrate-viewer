@@ -23,10 +23,5 @@ export default defineConfig({
       },
     },
   },
-  plugins: [
-    tanstackRouter({ quoteStyle: 'single' }),
-    react(),
-    tailwindcss(),
-    classicScript(),
-  ],
+  plugins: [tanstackRouter({ quoteStyle: 'single' }), react(), tailwindcss(), classicScript()],
 });

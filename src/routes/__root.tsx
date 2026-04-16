@@ -5,10 +5,7 @@ const RootLayout = () => (
   <div className="min-h-screen bg-primary-50">
     <header className="border-b border-primary-200 bg-white shadow-sm">
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-4 py-3">
-        <Link
-          to="/"
-          className="text-lg font-bold text-primary-900 whitespace-nowrap"
-        >
+        <Link to="/" className="text-lg font-bold text-primary-900 whitespace-nowrap">
           RO-Crate Viewer
         </Link>
 

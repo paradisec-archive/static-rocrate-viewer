@@ -47,10 +47,7 @@ export const MetadataPanel = ({ rootDataset }: { rootDataset: Entity }) => {
   if (Array.isArray(identifiers)) {
     for (const id of identifiers) {
       const entity = id as Entity;
-      if (
-        entity?.name === 'doi' ||
-        (Array.isArray(entity?.name) && entity.name.includes('doi'))
-      ) {
+      if (entity?.name === 'doi' || (Array.isArray(entity?.name) && entity.name.includes('doi'))) {
         doi = resolveValue(entity.value);
       }
     }
@@ -61,16 +58,9 @@ export const MetadataPanel = ({ rootDataset }: { rootDataset: Entity }) => {
       <dl className="divide-y divide-primary-100">
         {doi && (
           <div className="px-5 py-3 sm:flex sm:gap-4">
-            <dt className="text-sm font-medium text-primary-500 sm:w-40 sm:shrink-0">
-              DOI
-            </dt>
+            <dt className="text-sm font-medium text-primary-500 sm:w-40 sm:shrink-0">DOI</dt>
             <dd className="mt-1 text-sm text-primary-900 sm:mt-0">
-              <a
-                href={`https://doi.org/${doi}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary-600 underline hover:text-primary-800"
-              >
+              <a href={`https://doi.org/${doi}`} target="_blank" rel="noopener noreferrer" className="text-primary-600 underline hover:text-primary-800">
                 {doi}
               </a>
             </dd>
@@ -84,12 +74,8 @@ export const MetadataPanel = ({ rootDataset }: { rootDataset: Entity }) => {
           }
           return (
             <div key={field} className="px-5 py-3 sm:flex sm:gap-4">
-              <dt className="text-sm font-medium text-primary-500 sm:w-40 sm:shrink-0">
-                {label}
-              </dt>
-              <dd className="mt-1 whitespace-pre-line text-sm text-primary-900 sm:mt-0">
-                {value}
-              </dd>
+              <dt className="text-sm font-medium text-primary-500 sm:w-40 sm:shrink-0">{label}</dt>
+              <dd className="mt-1 whitespace-pre-line text-sm text-primary-900 sm:mt-0">{value}</dd>
             </div>
           );
         })}

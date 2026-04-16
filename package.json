@@ -2,7 +2,7 @@
   "name": "static-rocrate-viewer",
   "private": true,
   "version": "1.2.0",
-  "packageManager": "pnpm@10.30.2",
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -19,32 +19,32 @@
     "build:generator": "vite build --config vite.config.generator.ts"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.90.21",
-    "@tanstack/react-router": "^1.163.3",
+    "@tanstack/react-query": "^5.99.0",
+    "@tanstack/react-router": "^1.168.22",
     "@tanstack/react-table": "^8.21.3",
-    "fuse.js": "^7.1.0",
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
-    "ro-crate": "^3.6.1"
+    "fuse.js": "^7.3.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "ro-crate": "^3.7.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.4",
-    "@commitlint/cli": "^20.4.2",
-    "@commitlint/config-conventional": "^20.4.2",
+    "@biomejs/biome": "^2.4.12",
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@tailwindcss/vite": "^4.2.1",
-    "@tanstack/router-plugin": "^1.164.0",
-    "@types/node": "^24.10.1",
+    "@tailwindcss/vite": "^4.2.2",
+    "@tanstack/router-plugin": "^1.167.22",
+    "@types/node": "^24.12.2",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
-    "knip": "^5.85.0",
-    "lefthook": "^2.1.2",
+    "@vitejs/plugin-react": "^6.0.1",
+    "knip": "^6.4.1",
+    "lefthook": "^2.1.5",
     "semantic-release": "^25.0.3",
-    "tailwindcss": "^4.2.1",
-    "typescript": "~5.9.3",
-    "vite": "^7.3.1"
+    "tailwindcss": "^4.2.2",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.8"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

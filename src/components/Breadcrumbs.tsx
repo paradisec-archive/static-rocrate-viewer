@@ -19,11 +19,7 @@ export const Breadcrumbs = ({ crumbs }: { crumbs: Crumb[] }) => {
           <li key={crumb.label} className="flex items-center gap-1">
             <span aria-hidden="true">/</span>
             {crumb.to ? (
-              <Link
-                to={crumb.to}
-                params={crumb.params}
-                className="hover:text-primary-700"
-              >
+              <Link to={crumb.to} params={crumb.params} className="hover:text-primary-700">
                 {crumb.label}
               </Link>
             ) : (

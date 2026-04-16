@@ -1,18 +1,7 @@
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  type SortingState,
-  useReactTable,
-} from '@tanstack/react-table';
+import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table';
 import { useState } from 'react';
 import { formatDuration, formatFileSize } from '../lib/formatters';
-import {
-  getMediaAction,
-  getMediaLabel,
-  isPlayableAudio,
-} from '../lib/mediaTypes';
+import { getMediaAction, getMediaLabel, isPlayableAudio } from '../lib/mediaTypes';
 import type { CatalogFile } from '../lib/types';
 import { AudioPlayer } from './AudioPlayer';
 import { DownloadLink } from './DownloadLink';
@@ -23,21 +12,15 @@ const columnHelper = createColumnHelper<CatalogFile>();
 const columns = [
   columnHelper.accessor('filename', {
     header: 'Filename',
-    cell: (info) => (
-      <span className="font-mono text-sm">{info.getValue()}</span>
-    ),
+    cell: (info) => <span className="font-mono text-sm">{info.getValue()}</span>,
   }),
   columnHelper.accessor('encodingFormat', {
     header: 'Type',
-    cell: (info) => (
-      <span className="text-sm">{getMediaLabel(info.getValue())}</span>
-    ),
+    cell: (info) => <span className="text-sm">{getMediaLabel(info.getValue())}</span>,
   }),
   columnHelper.accessor('contentSize', {
     header: 'Size',
-    cell: (info) => (
-      <span className="text-sm">{formatFileSize(info.getValue())}</span>
-    ),
+    cell: (info) => <span className="text-sm">{formatFileSize(info.getValue())}</span>,
   }),
   columnHelper.accessor('duration', {
     header: 'Duration',
@@ -62,14 +45,9 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
 
   // Separate media for inline display
   const playableAudio = files.filter((f) => isPlayableAudio(f.encodingFormat));
-  const images = files.filter(
-    (f) => getMediaAction(f.encodingFormat) === 'image',
-  );
+  const images = files.filter((f) => getMediaAction(f.encodingFormat) === 'image');
   const downloads = files.filter(
-    (f) =>
-      getMediaAction(f.encodingFormat) === 'download' ||
-      (getMediaAction(f.encodingFormat) === 'audio' &&
-        !isPlayableAudio(f.encodingFormat)),
+    (f) => getMediaAction(f.encodingFormat) === 'download' || (getMediaAction(f.encodingFormat) === 'audio' && !isPlayableAudio(f.encodingFormat)),
   );
 
   return (
@@ -100,13 +78,7 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
           <h3 className="text-sm font-medium text-primary-700">Downloads</h3>
           <div className="flex flex-wrap gap-2">
             {downloads.map((f) => (
-              <DownloadLink
-                key={f.filename}
-                path={f.path}
-                filename={f.filename}
-                encodingFormat={f.encodingFormat}
-                contentSize={f.contentSize}
-              />
+              <DownloadLink key={f.filename} path={f.path} filename={f.filename} encodingFormat={f.encodingFormat} contentSize={f.contentSize} />
             ))}
           </div>
         </div>
@@ -127,13 +99,8 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       <div className="flex items-center gap-1">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{ asc: ' ▲', desc: ' ▼' }[
-                          header.column.getIsSorted() as string
-                        ] ?? ''}
+                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {{ asc: ' ▲', desc: ' ▼' }[header.column.getIsSorted() as string] ?? ''}
                       </div>
                     </th>
                   ))}
@@ -145,10 +112,7 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
                 <tr key={row.id} className="hover:bg-primary-50">
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className="px-4 py-2">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
                 </tr>
