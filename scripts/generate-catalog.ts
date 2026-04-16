@@ -1,43 +1,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { ROCrate } from 'ro-crate';
-
-interface CatalogFile {
-  filename: string;
-  path: string;
-  encodingFormat: string;
-  contentSize: number;
-  duration?: number;
-  doi?: string;
-}
-
-interface CatalogItem {
-  id: string;
-  collectionId: string;
-  title: string;
-  description: string;
-  dateCreated: string;
-  doi?: string;
-  languages: string[];
-  countries: string[];
-  files: CatalogFile[];
-}
-
-interface CatalogCollection {
-  id: string;
-  name: string;
-  description?: string;
-  dateCreated?: string;
-  doi?: string;
-  languages: string[];
-  countries: string[];
-  items: CatalogItem[];
-}
-
-interface Catalog {
-  generated: string;
-  collections: CatalogCollection[];
-}
+import type { Catalog, CatalogCollection, CatalogFile, CatalogItem } from '../src/lib/types';
 
 const resolveStringValue = (val: unknown): string => {
   if (val == null) {
@@ -76,6 +40,16 @@ const resolveStringArray = (val: unknown): string[] => {
   return arr.map(resolveStringValue).filter(Boolean);
 };
 
+const findMetadataFile = (dir: string, prefix: string): string | undefined => {
+  const candidates = [
+    join(dir, 'pdsc_admin', 'ro-crate-metadata.json'),
+    join(dir, 'pdsc_admin', `${prefix}-ro-crate-metadata.json`),
+    join(dir, 'ro-crate-metadata.json'),
+    join(dir, `${prefix}-ro-crate-metadata.json`),
+  ];
+  return candidates.find((p) => existsSync(p));
+};
+
 const findMetadataFiles = (dataDir: string): { metadataPath: string; collectionId: string; itemId: string }[] => {
   const results: {
     metadataPath: string;
@@ -103,22 +77,10 @@ const findMetadataFiles = (dataDir: string): { metadataPath: string; collectionI
         continue;
       }
 
-      // Check pdsc_admin subdirectory first
-      const pdscPath = join(itemPath, 'pdsc_admin', 'ro-crate-metadata.json');
-      if (existsSync(pdscPath)) {
+      const metadataPath = findMetadataFile(itemPath, itemDir);
+      if (metadataPath) {
         results.push({
-          metadataPath: pdscPath,
-          collectionId: colDir,
-          itemId: itemDir,
-        });
-        continue;
-      }
-
-      // Check item directory directly
-      const directPath = join(itemPath, 'ro-crate-metadata.json');
-      if (existsSync(directPath)) {
-        results.push({
-          metadataPath: directPath,
+          metadataPath,
           collectionId: colDir,
           itemId: itemDir,
         });
@@ -256,12 +218,9 @@ const processCollectionMetadata = (dataDir: string): Map<string, CollectionMeta>
       continue;
     }
 
-    let metadataPath = join(colPath, 'pdsc_admin', 'ro-crate-metadata.json');
-    if (!existsSync(metadataPath)) {
-      metadataPath = join(colPath, 'ro-crate-metadata.json');
-      if (!existsSync(metadataPath)) {
-        continue;
-      }
+    const metadataPath = findMetadataFile(colPath, colDir);
+    if (!metadataPath) {
+      continue;
     }
 
     try {
