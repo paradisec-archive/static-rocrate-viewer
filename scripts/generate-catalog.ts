@@ -41,12 +41,7 @@ const resolveStringArray = (val: unknown): string[] => {
 };
 
 const findMetadataFile = (dir: string, prefix: string): string | undefined => {
-  const candidates = [
-    join(dir, 'pdsc_admin', 'ro-crate-metadata.json'),
-    join(dir, 'pdsc_admin', `${prefix}-ro-crate-metadata.json`),
-    join(dir, 'ro-crate-metadata.json'),
-    join(dir, `${prefix}-ro-crate-metadata.json`),
-  ];
+  const candidates = [join(dir, 'ro-crate-metadata.json'), join(dir, `${prefix}-ro-crate-metadata.json`)];
   return candidates.find((p) => existsSync(p));
 };
 
@@ -69,9 +64,6 @@ const findMetadataFiles = (dataDir: string): { metadataPath: string; collectionI
     }
 
     for (const itemDir of readdirSync(colPath)) {
-      if (itemDir === 'pdsc_admin') {
-        continue; // Skip collection-level metadata
-      }
       const itemPath = join(colPath, itemDir);
       if (!statSync(itemPath).isDirectory()) {
         continue;
