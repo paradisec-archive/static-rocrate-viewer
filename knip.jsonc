@@ -1,5 +1,4 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "tags": ["-lintignore"],
-  "ignore": ["src/ro-crate.d.ts"]
+  "tags": ["-lintignore"]
 }

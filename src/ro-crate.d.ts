@@ -19,5 +19,5 @@ declare module 'ro-crate' {
     toJSON(): unknown;
   }
 
-  export { ROCrate, Entity };
+  export { Entity, ROCrate };
 }

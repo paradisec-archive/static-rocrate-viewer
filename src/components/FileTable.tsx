@@ -1,4 +1,13 @@
-import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, type SortingState, useReactTable } from '@tanstack/react-table';
+import {
+  createColumnHelper,
+  createSortedRowModel,
+  rowSortingFeature,
+  type SortingState,
+  sortFn_alphanumeric,
+  sortFn_text,
+  tableFeatures,
+  useTable,
+} from '@tanstack/react-table';
 import { useState } from 'react';
 import { formatDuration, formatFileSize } from '../lib/formatters';
 import { getMediaAction, getMediaLabel, isPlayableAudio } from '../lib/mediaTypes';
@@ -7,9 +16,15 @@ import { AudioPlayer } from './AudioPlayer';
 import { DownloadLink } from './DownloadLink';
 import { ImageViewer } from './ImageViewer';
 
-const columnHelper = createColumnHelper<CatalogFile>();
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+});
 
-const columns = [
+const columnHelper = createColumnHelper<typeof features, CatalogFile>();
+
+const columns = columnHelper.columns([
   columnHelper.accessor('filename', {
     header: 'Filename',
     cell: (info) => <span className="font-mono text-sm">{info.getValue()}</span>,
@@ -29,18 +44,17 @@ const columns = [
       return <span className="text-sm">{val ? formatDuration(val) : '—'}</span>;
     },
   }),
-];
+]);
 
 export const FileTable = ({ files }: { files: CatalogFile[] }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const table = useReactTable({
+  const table = useTable({
+    features,
     data: files,
     columns,
     state: { sorting },
     onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
   });
 
   // Separate media for inline display
@@ -99,7 +113,7 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
                       onClick={header.column.getToggleSortingHandler()}
                     >
                       <div className="flex items-center gap-1">
-                        {flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.isPlaceholder ? null : <table.FlexRender header={header} />}
                         {{ asc: ' ▲', desc: ' ▼' }[header.column.getIsSorted() as string] ?? ''}
                       </div>
                     </th>
@@ -110,9 +124,9 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
             <tbody className="divide-y divide-primary-100 bg-white">
               {table.getRowModel().rows.map((row) => (
                 <tr key={row.id} className="hover:bg-primary-50">
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getAllCells().map((cell) => (
                     <td key={cell.id} className="px-4 py-2">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      <table.FlexRender cell={cell} />
                     </td>
                   ))}
                 </tr>
