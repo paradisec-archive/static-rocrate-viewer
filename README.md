@@ -34,8 +34,6 @@ data/
         └── file1.jpg
 ```
 
-Metadata can also live inside a `pdsc_admin` directory e.g. `data/{CollectionId}/{ItemId}/pdsc_admin/ro-crate-metadata.json`, however this behaviour is deprecated and will be removed in a future release.
-
 ## Development
 
 ### Prerequisites

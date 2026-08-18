@@ -36,7 +36,7 @@ rm "$TARBALL"
 if [ ! -d "./data" ]; then
   echo ""
   echo "Warning: No ./data directory found."
-  echo "Place your RO-Crate data in ./data/{CollectionId}/{ItemId}/pdsc_admin/ro-crate-metadata.json"
+  echo "Place your RO-Crate data in ./data/{CollectionId}/{ItemId}/ro-crate-metadata.json"
   echo ""
   exit 0
 fi
