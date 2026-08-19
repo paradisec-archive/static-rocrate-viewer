@@ -1,0 +1,484 @@
+{
+  "@context": [
+    "https://w3id.org/ro/crate/1.2-DRAFT/context",
+    {
+      "@vocab": "http://schema.org/"
+    },
+    "http://purl.archive.org/language-data-commons/context.json",
+    {
+      "Geometry": "http://www.opengis.net/ont/geosparql#Geometry",
+      "asWKT": "http://www.opengis.net/ont/geosparql#asWKT"
+    },
+    "https://w3id.org/ldac/context"
+  ],
+  "@graph": [
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN",
+      "@type": [
+        "Data",
+        "Object",
+        "RepositoryObject"
+      ],
+      "conformsTo": {
+        "@id": "https://w3id.org/ldac/profile#Object"
+      },
+      "additionalType": "item",
+      "identifier": [
+        {
+          "@id": "#identifier_domain"
+        },
+        {
+          "@id": "#identifier_identifier"
+        },
+        {
+          "@id": "#identifier_collectionIdentifier"
+        },
+        {
+          "@id": "#identifier_itemIdentifier"
+        },
+        {
+          "@id": "#identifier_doi"
+        },
+        {
+          "@id": "#identifier_collectionIdentifier"
+        }
+      ],
+      "name": "Descriptions recorded at Vētuboso",
+      "description": "01: Description of video ‘Charlie Chaplin Lion’; 02: Description of video ‘Laurel Hardy Piano’; 03: Description of video ‘Obstruction’",
+      "creditText": "Daniel Krausse (collector), Daniel Krausse (annotator), Sandy Mumeg (consultant), 2018. Descriptions recorded at Vētuboso. EAF+XML/MPEG/WAV/MP4/MXF.  KD1-VU20180811SAN at catalog.paradisec.org.au. https://dx.doi.org/10.26278/4AB8-6T41",
+      "contentLocation": [
+        {
+          "@id": "#place-Oceania"
+        }
+      ],
+      "dateCreated": "2021-08-17",
+      "dateModified": "2022-06-23",
+      "datePublished": "2022-06-23",
+      "publisher": {
+        "@id": "http://nla.gov.au/nla.party-1810306"
+      },
+      "collector": {
+        "@id": "mailto:krausse.daniel@gmail.com"
+      },
+      "inLanguage": [
+        {
+          "@id": "http://www.language-archives.org/language/bis"
+        }
+      ],
+      "ldac:subjectLanguage": [
+        {
+          "@id": "http://www.language-archives.org/language/msn"
+        }
+      ],
+      "countries": [
+        {
+          "@id": "#country-Vanuatu"
+        }
+      ],
+      "private": false,
+      "paradisec:admins": [],
+      "ldac:doi": "10.26278/4AB8-6T41",
+      "license": {
+        "@id": "#license-1"
+      },
+      "operator": {
+        "@id": "mailto:enwardy@hotmail.com"
+      },
+      "sourceOrganization": {
+        "@id": "http://nla.gov.au/nla.party-565275"
+      },
+      "pcdm:memberOf": {
+        "@id": "http://catalog.paradisec.org.au/repository/KD1",
+        "name": "Recordings from Vanua Lava, Vanuatu"
+      },
+      "root": {
+        "@id": "http://catalog.paradisec.org.au/repository/KD1"
+      },
+      "languageAsGiven": "Vurës",
+      "originalMedia": "wav",
+      "originatedOn": "2018-08-11",
+      "hasPart": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.eaf"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.wav"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.eaf"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.wav"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.eaf"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mp4"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mxf"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.wav"
+        }
+      ],
+      "communicationMode": [
+        {
+          "@id": "https://w3id.org/ldac/terms#primary text"
+        }
+      ],
+      "paradisec:dataType": [
+        {
+          "@id": "#datatype-10",
+          "name": "Sound"
+        }
+      ],
+      "annotator": [
+        {
+          "@id": "mailto:krausse.daniel@gmail.com"
+        }
+      ],
+      "consultant": [
+        {
+          "@id": "#person-11335"
+        }
+      ],
+      "receivedOn": "2021-08-17",
+      "bornDigital": true,
+      "external": false,
+      "metadataExportable": true,
+      "paradisec:users": []
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.2-DRAFT"
+      },
+      "about": {
+        "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN"
+      }
+    },
+    {
+      "@id": "#identifier_domain",
+      "@type": "PropertyValue",
+      "name": "domain",
+      "value": "paradisec.org.au"
+    },
+    {
+      "@id": "#identifier_identifier",
+      "@type": "PropertyValue",
+      "name": "identifier",
+      "value": "KD1-VU20180811SAN"
+    },
+    {
+      "@id": "#identifier_collectionIdentifier",
+      "@type": "PropertyValue",
+      "name": "collectionIdentifier",
+      "value": "KD1"
+    },
+    {
+      "@id": "#identifier_itemIdentifier",
+      "@type": "PropertyValue",
+      "name": "itemIdentifier",
+      "value": "VU20180811SAN"
+    },
+    {
+      "@id": "#identifier_doi",
+      "@type": "PropertyValue",
+      "name": "doi",
+      "value": "10.26278/4AB8-6T41"
+    },
+    {
+      "@id": "#country-Vanuatu",
+      "@type": "Country",
+      "code": "VU",
+      "name": "Vanuatu"
+    },
+    {
+      "@id": "#license-1",
+      "@type": "CreativeWork",
+      "name": "Open (subject to agreeing to PDSC access conditions)"
+    },
+    {
+      "@id": "mailto:krausse.daniel@gmail.com",
+      "@type": "Person",
+      "familyName": "Krausse",
+      "givenName": "Daniel",
+      "name": "Daniel Krausse",
+      "email": "krausse.daniel@gmail.com"
+    },
+    {
+      "@id": "mailto:enwardy@hotmail.com",
+      "@type": "Person",
+      "familyName": "Ward",
+      "givenName": "Nick",
+      "name": "Nick Ward",
+      "email": "enwardy@hotmail.com"
+    },
+    {
+      "@id": "#person-11335",
+      "@type": "Person",
+      "familyName": "Mumeg",
+      "givenName": "Sandy",
+      "name": "Sandy Mumeg"
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.eaf",
+      "@type": "File",
+      "contentSize": 41434,
+      "dateCreated": "2021-08-31",
+      "dateModified": "2026-04-01",
+      "encodingFormat": "application/eaf+xml",
+      "name": "KD1-VU20180811SAN-01.eaf",
+      "filename": "KD1-VU20180811SAN-01.eaf",
+      "doi": "10.26278/QEEP-TV31",
+      "annotationOf": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.wav"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.mp3",
+      "@type": "File",
+      "contentSize": 987584,
+      "dateCreated": "2021-09-02",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "audio/mpeg",
+      "name": "KD1-VU20180811SAN-01.mp3",
+      "filename": "KD1-VU20180811SAN-01.mp3",
+      "doi": "10.26278/FHA2-HP49",
+      "duration": 246.735,
+      "hasAnnotation": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.eaf"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.wav",
+      "@type": "File",
+      "contentSize": 142362612,
+      "dateCreated": "2021-09-02",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "audio/wav",
+      "name": "KD1-VU20180811SAN-01.wav",
+      "filename": "KD1-VU20180811SAN-01.wav",
+      "doi": "10.26278/ZB93-CZ05",
+      "bitrate": 4616561,
+      "duration": 246.699,
+      "channels": 2,
+      "sampleRate": 96000,
+      "hasAnnotation": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-01.eaf"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.eaf",
+      "@type": "File",
+      "contentSize": 60443,
+      "dateCreated": "2021-08-31",
+      "dateModified": "2026-04-01",
+      "encodingFormat": "application/eaf+xml",
+      "name": "KD1-VU20180811SAN-02.eaf",
+      "filename": "KD1-VU20180811SAN-02.eaf",
+      "doi": "10.26278/NGSB-DW15",
+      "annotationOf": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.wav"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.mp3",
+      "@type": "File",
+      "contentSize": 1284857,
+      "dateCreated": "2021-09-02",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "audio/mpeg",
+      "name": "KD1-VU20180811SAN-02.mp3",
+      "filename": "KD1-VU20180811SAN-02.mp3",
+      "doi": "10.26278/2JYR-2M79",
+      "duration": 321.053,
+      "hasAnnotation": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.eaf"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.wav",
+      "@type": "File",
+      "contentSize": 185177912,
+      "dateCreated": "2021-09-02",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "audio/wav",
+      "name": "KD1-VU20180811SAN-02.wav",
+      "filename": "KD1-VU20180811SAN-02.wav",
+      "doi": "10.26278/4F3Z-GC16",
+      "bitrate": 4614505,
+      "duration": 321.036,
+      "channels": 2,
+      "sampleRate": 96000,
+      "hasAnnotation": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-02.eaf"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.eaf",
+      "@type": "File",
+      "contentSize": 9631,
+      "dateCreated": "2021-08-31",
+      "dateModified": "2026-04-01",
+      "encodingFormat": "application/eaf+xml",
+      "name": "KD1-VU20180811SAN-03.eaf",
+      "filename": "KD1-VU20180811SAN-03.eaf",
+      "doi": "10.26278/RAFW-QX55",
+      "annotationOf": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.wav"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mp4"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mp3",
+      "@type": "File",
+      "contentSize": 81135,
+      "dateCreated": "2021-09-02",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "audio/mpeg",
+      "name": "KD1-VU20180811SAN-03.mp3",
+      "filename": "KD1-VU20180811SAN-03.mp3",
+      "doi": "10.26278/V8N9-KF57",
+      "duration": 20.122,
+      "hasAnnotation": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.eaf"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mp4",
+      "@type": "File",
+      "contentSize": 666880,
+      "dateCreated": "2022-02-22",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "video/mp4",
+      "name": "KD1-VU20180811SAN-03.mp4",
+      "filename": "KD1-VU20180811SAN-03.mp4",
+      "doi": "10.26278/FJRH-7159",
+      "duration": 15.836,
+      "hasAnnotation": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.eaf"
+        }
+      ]
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.mxf",
+      "@type": "File",
+      "contentSize": 79104072,
+      "dateCreated": "2022-02-22",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "application/mxf",
+      "name": "KD1-VU20180811SAN-03.mxf",
+      "filename": "KD1-VU20180811SAN-03.mxf",
+      "doi": "10.26278/1T6N-A254"
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.wav",
+      "@type": "File",
+      "contentSize": 642994,
+      "dateCreated": "2021-09-02",
+      "dateModified": "2022-08-28",
+      "encodingFormat": "audio/wav",
+      "name": "KD1-VU20180811SAN-03.wav",
+      "filename": "KD1-VU20180811SAN-03.wav",
+      "doi": "10.26278/4YRQ-T573",
+      "duration": 20.084,
+      "hasAnnotation": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/KD1/VU20180811SAN/KD1-VU20180811SAN-03.eaf"
+        }
+      ]
+    },
+    {
+      "@id": "#geo-166.0,-21.0-171.0,-13.0",
+      "@type": "Geometry",
+      "asWKT": "POLYGON((166.0 -13.0, 171.0 -13.0, 171.0 -21.0, 166.0 -21.0, 166.0 -13.0))"
+    },
+    {
+      "@id": "#geo-166.427,-22.283-166.467,-22.241",
+      "@type": "Geometry",
+      "asWKT": "POLYGON((166.427 -22.241, 166.467 -22.241, 166.467 -22.283, 166.427 -22.283, 166.427 -22.241))"
+    },
+    {
+      "@id": "#geo-167.442,-13.95-167.589,-13.838",
+      "@type": "Geometry",
+      "asWKT": "POLYGON((167.442 -13.838, 167.589 -13.838, 167.589 -13.95, 167.442 -13.95, 167.442 -13.838))"
+    },
+    {
+      "@id": "#place-Oceania",
+      "@type": "Place",
+      "name": "Oceania",
+      "geo": {
+        "@id": "#geo-166.0,-21.0-171.0,-13.0"
+      }
+    },
+    {
+      "@id": "http://www.language-archives.org/language/bis",
+      "@type": "Language",
+      "code": "bis",
+      "name": "Bislama",
+      "geo": {
+        "@id": "#geo-166.427,-22.283-166.467,-22.241"
+      }
+    },
+    {
+      "@id": "http://www.language-archives.org/language/msn",
+      "@type": "Language",
+      "code": "msn",
+      "name": "Vurës",
+      "geo": {
+        "@id": "#geo-167.442,-13.95-167.589,-13.838"
+      }
+    },
+    {
+      "@id": "http://nla.gov.au/nla.party-1810306",
+      "@type": "Organisation",
+      "name": "PARADISEC"
+    },
+    {
+      "@id": "http://nla.gov.au/nla.party-565275",
+      "@type": "Organisation",
+      "name": "University of Newcastle"
+    }
+  ]
+}

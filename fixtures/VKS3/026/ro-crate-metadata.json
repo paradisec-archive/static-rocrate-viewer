@@ -1,0 +1,268 @@
+{
+  "@context": [
+    "https://w3id.org/ro/crate/1.2-DRAFT/context",
+    {
+      "@vocab": "http://schema.org/"
+    },
+    "http://purl.archive.org/language-data-commons/context.json",
+    {
+      "Geometry": "http://www.opengis.net/ont/geosparql#Geometry",
+      "asWKT": "http://www.opengis.net/ont/geosparql#asWKT"
+    },
+    "https://w3id.org/ldac/context"
+  ],
+  "@graph": [
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/VKS3/026",
+      "@type": [
+        "Data",
+        "Object",
+        "RepositoryObject"
+      ],
+      "conformsTo": {
+        "@id": "https://w3id.org/ldac/profile#Object"
+      },
+      "additionalType": "item",
+      "identifier": [
+        {
+          "@id": "#identifier_domain"
+        },
+        {
+          "@id": "#identifier_identifier"
+        },
+        {
+          "@id": "#identifier_collectionIdentifier"
+        },
+        {
+          "@id": "#identifier_itemIdentifier"
+        },
+        {
+          "@id": "#identifier_doi"
+        },
+        {
+          "@id": "#identifier_collectionIdentifier"
+        }
+      ],
+      "name": "Legende d' Erakor",
+      "description": "Side A: Le voyage d'Atafu (Erakor)\r\n\r\nSide B: ",
+      "creditText": "Paul Gardissart (collector). Legende d&#39; Erakor. JPEG/TIFF/MPEG/WAV.  VKS3-026 at catalog.paradisec.org.au. https://dx.doi.org/10.26278/h8ec-cs66",
+      "contentLocation": [
+        {
+          "@id": "#place-166.0,-21.0-171.0,-13.0"
+        }
+      ],
+      "dateCreated": "2024-11-21",
+      "dateModified": "2025-01-30",
+      "datePublished": "2025-01-30",
+      "publisher": {
+        "@id": "http://nla.gov.au/nla.party-1810306"
+      },
+      "collector": {
+        "@id": "#person-12604"
+      },
+      "inLanguage": [],
+      "ldac:subjectLanguage": [],
+      "countries": [],
+      "usageinfo": "Please ask the Vanuatu Cultural Centre for permission to access these files.",
+      "private": false,
+      "paradisec:admins": [],
+      "ldac:doi": "10.26278/h8ec-cs66",
+      "license": {
+        "@id": "#license-3-7c810740"
+      },
+      "operator": {
+        "@id": "mailto:katie.bicevskis@gmail.com"
+      },
+      "pcdm:memberOf": {
+        "@id": "http://catalog.paradisec.org.au/repository/VKS3",
+        "name": "Collections of Paul Gardissart"
+      },
+      "root": {
+        "@id": "http://catalog.paradisec.org.au/repository/VKS3"
+      },
+      "hasPart": [
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-1.jpg"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-1.tif"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-A.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-A.wav"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-B.mp3"
+        },
+        {
+          "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-B.wav"
+        }
+      ],
+      "communicationMode": [],
+      "paradisec:dataType": [],
+      "digitisedOn": "2024-12-18",
+      "bornDigital": false,
+      "external": false,
+      "metadataExportable": true,
+      "tapesReturned": false,
+      "paradisec:users": [],
+      "paradisec:ingestNotes": "Digitized by Michael Manzini - Sydney\r\nCassette Player: Tascam 122mkIII\r\nA/D Converter: RME ADI-2 Pro FS\r\nFile Quality: 24bit/96kHz, Stereo\r\nLength: Side A: 35:05 Side B: 10:17\r\nSpeed: 4.76fps\r\nListening Quality: generally good, somewhat muffled throughout. Baked."
+    },
+    {
+      "@id": "ro-crate-metadata.json",
+      "@type": "CreativeWork",
+      "conformsTo": {
+        "@id": "https://w3id.org/ro/crate/1.2-DRAFT"
+      },
+      "about": {
+        "@id": "http://catalog.paradisec.org.au/repository/VKS3/026"
+      }
+    },
+    {
+      "@id": "#identifier_domain",
+      "@type": "PropertyValue",
+      "name": "domain",
+      "value": "paradisec.org.au"
+    },
+    {
+      "@id": "#identifier_identifier",
+      "@type": "PropertyValue",
+      "name": "identifier",
+      "value": "VKS3-026"
+    },
+    {
+      "@id": "#identifier_collectionIdentifier",
+      "@type": "PropertyValue",
+      "name": "collectionIdentifier",
+      "value": "VKS3"
+    },
+    {
+      "@id": "#identifier_itemIdentifier",
+      "@type": "PropertyValue",
+      "name": "itemIdentifier",
+      "value": "026"
+    },
+    {
+      "@id": "#identifier_doi",
+      "@type": "PropertyValue",
+      "name": "doi",
+      "value": "10.26278/h8ec-cs66"
+    },
+    {
+      "@id": "#license-3-7c810740",
+      "@type": "CreativeWork",
+      "name": "Closed (subject to the access condition details)",
+      "description": "Please ask the Vanuatu Cultural Centre for permission to access these files."
+    },
+    {
+      "@id": "#person-12604",
+      "@type": "Person",
+      "familyName": "Gardissart",
+      "givenName": "Paul",
+      "name": "Paul Gardissart"
+    },
+    {
+      "@id": "mailto:katie.bicevskis@gmail.com",
+      "@type": "Person",
+      "familyName": "Bicevskis",
+      "givenName": "Katie",
+      "name": "Katie Bicevskis",
+      "email": "katie.bicevskis@gmail.com"
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-1.jpg",
+      "@type": "File",
+      "contentSize": 141037,
+      "dateCreated": "2025-01-30",
+      "dateModified": "2025-01-31",
+      "encodingFormat": "image/jpeg",
+      "name": "VKS3-026-1.jpg",
+      "filename": "VKS3-026-1.jpg",
+      "doi": "10.26278/nptb-nm90"
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-1.tif",
+      "@type": "File",
+      "contentSize": 792021,
+      "dateCreated": "2025-01-30",
+      "dateModified": "2025-01-31",
+      "encodingFormat": "image/tiff",
+      "name": "VKS3-026-1.tif",
+      "filename": "VKS3-026-1.tif",
+      "doi": "10.26278/sv44-tx45"
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-A.mp3",
+      "@type": "File",
+      "contentSize": 240761,
+      "dateCreated": "2024-12-24",
+      "dateModified": "2025-01-01",
+      "encodingFormat": "audio/mpeg",
+      "name": "VKS3-026-A.mp3",
+      "filename": "VKS3-026-A.mp3",
+      "doi": "10.26278/79yp-wk42",
+      "duration": 60.029
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-A.wav",
+      "@type": "File",
+      "contentSize": 1213042808,
+      "dateCreated": "2024-12-24",
+      "dateModified": "2025-01-01",
+      "encodingFormat": "audio/wav",
+      "name": "VKS3-026-A.wav",
+      "filename": "VKS3-026-A.wav",
+      "doi": "10.26278/7mgy-p074",
+      "bitrate": 4608066,
+      "duration": 2105.95,
+      "channels": 2,
+      "sampleRate": 96000
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-B.mp3",
+      "@type": "File",
+      "contentSize": 240761,
+      "dateCreated": "2024-12-24",
+      "dateModified": "2025-01-01",
+      "encodingFormat": "audio/mpeg",
+      "name": "VKS3-026-B.mp3",
+      "filename": "VKS3-026-B.mp3",
+      "doi": "10.26278/hry0-7h83",
+      "duration": 60.029
+    },
+    {
+      "@id": "http://catalog.paradisec.org.au/repository/VKS3/026/VKS3-026-B.wav",
+      "@type": "File",
+      "contentSize": 355661468,
+      "dateCreated": "2024-12-24",
+      "dateModified": "2025-01-01",
+      "encodingFormat": "audio/wav",
+      "name": "VKS3-026-B.wav",
+      "filename": "VKS3-026-B.wav",
+      "doi": "10.26278/fbbq-s084",
+      "bitrate": 4608223,
+      "duration": 617.438,
+      "channels": 2,
+      "sampleRate": 96000
+    },
+    {
+      "@id": "#geo-166.0,-21.0-171.0,-13.0",
+      "@type": "Geometry",
+      "asWKT": "POLYGON((166.0 -13.0, 171.0 -13.0, 171.0 -21.0, 166.0 -21.0, 166.0 -13.0))"
+    },
+    {
+      "@id": "#place-166.0,-21.0-171.0,-13.0",
+      "@type": "Place",
+      "geo": {
+        "@id": "#geo-166.0,-21.0-171.0,-13.0"
+      }
+    },
+    {
+      "@id": "http://nla.gov.au/nla.party-1810306",
+      "@type": "Organisation",
+      "name": "PARADISEC"
+    }
+  ]
+}

@@ -6,7 +6,8 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!!src/routeTree.gen.ts", "!!.claude", "!!public/catalog.js", "!!public/rocrate-data.js"]
+    // fixtures/ holds archive crates verbatim - reformatting them would defeat their purpose
+    "includes": ["**", "!!src/routeTree.gen.ts", "!!.claude", "!!public/catalog.js", "!!public/rocrate-data.js", "!!fixtures"]
   },
   "formatter": {
     "enabled": true,
