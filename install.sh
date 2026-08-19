@@ -29,7 +29,7 @@ curl -fsSL -o "$TARBALL" "$DOWNLOAD_URL"
 
 # Extract
 echo "Extracting..."
-tar -xzf "$TARBALL"
+tar -xzf "$TARBALL" --no-same-owner --no-same-permissions -m
 rm "$TARBALL"
 
 # Check for data directory
