@@ -12,3 +12,5 @@ pre-commit:
       run: pnpm lint:types
     - name: knip
       run: pnpm lint:knip
+    - name: test
+      run: pnpm test

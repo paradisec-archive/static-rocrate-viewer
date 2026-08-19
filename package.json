@@ -11,6 +11,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "pnpm lint:biome && pnpm lint:types && pnpm lint:knip",
     "lint:biome": "biome check",
     "lint:types": "tsc -b --noEmit",
@@ -44,6 +46,7 @@
     "semantic-release": "^25.0.9",
     "tailwindcss": "^4.3.3",
     "typescript": "~7.0.2",
-    "vite": "^8.2.1"
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
   }
 }
