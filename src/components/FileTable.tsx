@@ -10,11 +10,12 @@ import {
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import { formatDuration, formatFileSize } from '../lib/formatters';
-import { getMediaAction, getMediaLabel, isPlayableAudio } from '../lib/mediaTypes';
+import { getMediaLabel, getMediaSection, type MediaSection } from '../lib/mediaTypes';
 import type { CatalogFile } from '../lib/types';
 import { AudioPlayer } from './AudioPlayer';
 import { DownloadLink } from './DownloadLink';
 import { ImageViewer } from './ImageViewer';
+import { VideoPlayer } from './VideoPlayer';
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -58,19 +59,29 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
   });
 
   // Separate media for inline display
-  const playableAudio = files.filter((f) => isPlayableAudio(f.encodingFormat));
-  const images = files.filter((f) => getMediaAction(f.encodingFormat) === 'image');
-  const downloads = files.filter(
-    (f) => getMediaAction(f.encodingFormat) === 'download' || (getMediaAction(f.encodingFormat) === 'audio' && !isPlayableAudio(f.encodingFormat)),
-  );
+  const section = (name: MediaSection) => files.filter((f) => getMediaSection(f.encodingFormat) === name);
+  const videos = section('video');
+  const audio = section('audio');
+  const images = section('image');
+  const downloads = section('download');
 
   return (
     <div className="space-y-6">
+      {/* Inline video players */}
+      {videos.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-primary-700">Video</h3>
+          {videos.map((f) => (
+            <VideoPlayer key={f.filename} src={f.path} filename={f.filename} />
+          ))}
+        </div>
+      )}
+
       {/* Inline audio players */}
-      {playableAudio.length > 0 && (
+      {audio.length > 0 && (
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-primary-700">Audio</h3>
-          {playableAudio.map((f) => (
+          {audio.map((f) => (
             <AudioPlayer key={f.filename} src={f.path} filename={f.filename} />
           ))}
         </div>
