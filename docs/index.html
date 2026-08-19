@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Static RO-Crate Viewer — Browse RO-Crate archives offline</title>
-  <meta name="description" content="A static web application for browsing RO-Crate archives. Works by double-clicking index.html — no server required.">
+  <meta name="description" content="A static web application for browsing RO-Crate archives, with inline audio, video and ELAN transcripts. Works by double-clicking index.html — no server required.">
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     *,
@@ -200,6 +200,30 @@
       background: var(--white);
     }
 
+    .screenshot-feature {
+      margin-top: 32px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--primary-100);
+      background: var(--white);
+    }
+
+    .screenshot-feature img {
+      width: 100%;
+      display: block;
+    }
+
+    .screenshot-feature figcaption {
+      padding: 14px 20px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--primary-700);
+      text-align: center;
+      background: var(--primary-50);
+      border-top: 1px solid var(--primary-100);
+    }
+
     .screenshot-card img {
       width: 100%;
     }
@@ -245,21 +269,27 @@
       border-bottom: 1px solid var(--primary-100);
     }
 
+    /* Flex, not grid, so an odd final row centres rather than orphaning left. */
     .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 24px;
     }
 
+    .features-grid > * {
+      flex: 0 1 calc((100% - 48px) / 3);
+    }
+
     @media (max-width: 840px) {
-      .features-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .features-grid > * {
+        flex-basis: calc((100% - 24px) / 2);
       }
     }
 
     @media (max-width: 540px) {
-      .features-grid {
-        grid-template-columns: 1fr;
+      .features-grid > * {
+        flex-basis: 100%;
       }
     }
 
@@ -605,7 +635,8 @@
     /* ── Lightbox ────────────────────────────── */
 
     .screenshot-hero,
-    .screenshot-card {
+    .screenshot-card,
+    .screenshot-feature {
       cursor: pointer;
     }
 
@@ -758,6 +789,11 @@
           <figcaption>Search</figcaption>
         </figure>
       </div>
+
+      <figure class="screenshot-feature" data-lightbox="4">
+        <img src="images/transcript.jpg" alt="An ELAN transcript timeline beneath a video player, with three annotation tiers and a playhead marking the current annotation" width="1280" height="757" loading="lazy">
+        <figcaption>An ELAN <code>.eaf</code> transcript on the timeline, beneath the recording it annotates — the playhead marks where playback is, and clicking an annotation seeks to it. Switch to <strong>Table</strong> for the same annotations as readable rows.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -788,7 +824,14 @@
             <i data-lucide="play"></i>
           </div>
           <h3>Inline Media Playback</h3>
-          <p>Built-in audio player and image viewer for MP3, WAV, JPEG, and PNG files.</p>
+          <p>Audio and video play in the page — whatever format your browser can decode, asked at render time rather than fixed to a list. Images too.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <i data-lucide="captions"></i>
+          </div>
+          <h3>ELAN Transcripts</h3>
+          <p><code>.eaf</code> annotations render beside the recording they annotate — as a table, or as an ELAN-like timeline. The playhead highlights the current annotation, and clicking one seeks the player to it.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">
@@ -850,12 +893,13 @@
     └── {ItemId}/
         ├── ro-crate-metadata.json
         ├── audio.mp3
+        ├── audio.eaf
         └── image.jpg</code></pre>
           </div>
         </div>
 
         <div class="install-note">
-          <p><strong>What does the install script do?</strong> It downloads the latest release tarball, extracts the pre-built viewer files, and runs the catalog generator against your <code>data/</code> directory to produce the static browse and search indexes.</p>
+          <p><strong>What does the install script do?</strong> It downloads the latest release tarball, extracts the pre-built viewer files, and runs the catalog generator against your <code>data/</code> directory to produce the static browse and search indexes — and to parse any ELAN <code>.eaf</code> files into transcripts the viewer can render.</p>
           <p><strong>Need more detail?</strong> See the <a href="#guide">step-by-step guide</a> below for a complete walkthrough with examples.</p>
         </div>
       </div>
@@ -972,7 +1016,7 @@ cd ~/my-archive</code>
           <ul class="dot-list">
             <li><strong>Downloads</strong> the latest viewer release from GitHub</li>
             <li><strong>Extracts</strong> the viewer files into your working directory</li>
-            <li><strong>Generates</strong> a searchable catalog from your <code>ro-crate-metadata.json</code> files</li>
+            <li><strong>Generates</strong> a searchable catalog from your <code>ro-crate-metadata.json</code> files, and transcripts from any ELAN <code>.eaf</code> files it finds</li>
           </ul>
           <p>After it finishes, your directory will look like this:</p>
           <div class="code-wrapper">
@@ -981,6 +1025,7 @@ cd ~/my-archive</code>
 ├── index.html           ← Open this in your browser
 ├── catalog.js           ← Generated search index
 ├── rocrate-data.js      ← Generated metadata
+├── transcripts.js       ← Generated ELAN transcripts
 ├── generate-catalog.js  ← Catalog generator script
 └── assets/              ← Viewer CSS and JavaScript</code>
           </div>
@@ -1066,6 +1111,7 @@ xdg-open index.html</code>
         { src: 'images/collection.jpg', caption: 'Collection detail' },
         { src: 'images/item.jpg', caption: 'Item detail' },
         { src: 'images/search.jpg', caption: 'Search' },
+        { src: 'images/transcript.jpg', caption: 'ELAN transcript timeline' },
       ];
       var current = 0;
       var lightbox = document.getElementById('lightbox');
