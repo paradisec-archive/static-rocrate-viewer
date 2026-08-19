@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v2.0.0...v2.0.1) (2026-08-19)
+
+
+### Bug Fixes
+
+* stop the release tarball from failing to extract ([8b30624](https://github.com/paradisec-archive/static-rocrate-viewer/commit/8b306248c549e0576b2d81f2c6feb744df443a74))
+
 # [2.0.0](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v1.2.0...v2.0.0) (2026-08-19)
 
 
