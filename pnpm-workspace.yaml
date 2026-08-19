@@ -1,3 +1,6 @@
 allowBuilds:
   lefthook: true # git hooks manager, needs postinstall to sync hooks
   esbuild: true # JS bundler used by Vite, needs postinstall for platform binary
+
+update:
+  githubActions: true
