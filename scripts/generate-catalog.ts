@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { basename, join, resolve } from 'node:path';
 import { ROCrate } from 'ro-crate';
 import type { Catalog, CatalogCollection, CatalogFile, CatalogItem } from '../src/lib/types';
 
@@ -157,7 +157,7 @@ const processItem = (
         continue;
       }
 
-      const relativePath = `data/${collectionId}/${itemId}/${filename}`;
+      const relativePath = `${basename(dataDir)}/${collectionId}/${itemId}/${filename}`;
       const encodingFormat = resolveStringValue(fileEntity.encodingFormat);
       const contentSize = Number(fileEntity.contentSize) || 0;
       const duration = fileEntity.duration != null ? Number(fileEntity.duration) : undefined;

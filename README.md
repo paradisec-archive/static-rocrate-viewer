@@ -49,13 +49,26 @@ pnpm install
 
 ### Generate catalog from data
 
-Place your RO-Crate data in `./data/`, then:
-
 ```bash
 pnpm generate
 ```
 
 This produces `public/catalog.js` and `public/rocrate-data.js`, which Vite serves during development and copies to `dist/` on build.
+
+There are two data directories, and they serve different people:
+
+| Directory | Who | Tracked in git |
+|---|---|---|
+| `./data/` | End users, pointed at their own archive. What `install.sh` and the standalone generator default to. | No |
+| `./fixtures/` | This repo's committed sample crates, which `pnpm generate` and the tests run against. | Yes |
+
+The generator takes the directory as `--data-dir` and derives the URL prefix it
+writes into `catalog.js` from that directory's name, so the same crate works
+unchanged in either. To generate against your own archive instead:
+
+```bash
+node scripts/generate-catalog.ts --data-dir ./data
+```
 
 ### Development server
 

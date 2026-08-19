@@ -15,7 +15,7 @@
     "lint:biome": "biome check",
     "lint:types": "tsc -b --noEmit",
     "lint:knip": "knip",
-    "generate": "node scripts/generate-catalog.ts",
+    "generate": "node scripts/generate-catalog.ts --data-dir ./fixtures",
     "build:generator": "vite build --config vite.config.generator.ts"
   },
   "dependencies": {
