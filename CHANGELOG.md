@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v2.0.1...v2.0.2) (2026-08-19)
+
+
+### Bug Fixes
+
+* attach release assets again ([6f66f75](https://github.com/paradisec-archive/static-rocrate-viewer/commit/6f66f75a320500b2a46e29f78fe838ec40c0b704))
+
 ## [2.0.1](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v2.0.0...v2.0.1) (2026-08-19)
 
 
