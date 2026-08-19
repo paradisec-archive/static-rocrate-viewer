@@ -9,13 +9,15 @@ import {
   useTable,
 } from '@tanstack/react-table';
 import { useState } from 'react';
+import { useTranscripts } from '../hooks/useTranscripts';
 import { formatDuration, formatFileSize } from '../lib/formatters';
 import { getMediaLabel, getMediaSection, type MediaSection } from '../lib/mediaTypes';
+import { textBearingTiers } from '../lib/transcript';
 import type { CatalogFile } from '../lib/types';
-import { AudioPlayer } from './AudioPlayer';
 import { DownloadLink } from './DownloadLink';
 import { ImageViewer } from './ImageViewer';
-import { VideoPlayer } from './VideoPlayer';
+import { MediaBlock } from './MediaBlock';
+import { TranscriptView } from './TranscriptView';
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -49,6 +51,7 @@ const columns = columnHelper.columns([
 
 export const FileTable = ({ files }: { files: CatalogFile[] }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const { data: transcripts } = useTranscripts();
 
   const table = useTable({
     features,
@@ -65,6 +68,10 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
   const images = section('image');
   const downloads = section('download');
 
+  // A transcript keyed to a file we render no player for — a standalone `.eaf`,
+  // or a host rendition this browser cannot decode. Nothing to sync to.
+  const unplayed = [...images, ...downloads].flatMap((f) => transcripts?.[f.path] ?? []).filter((t) => textBearingTiers(t.document).length > 0);
+
   return (
     <div className="space-y-6">
       {/* Inline video players */}
@@ -72,7 +79,7 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-primary-700">Video</h3>
           {videos.map((f) => (
-            <VideoPlayer key={f.filename} src={f.path} filename={f.filename} />
+            <MediaBlock key={f.filename} file={f} />
           ))}
         </div>
       )}
@@ -82,7 +89,7 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
         <div className="space-y-3">
           <h3 className="text-sm font-medium text-primary-700">Audio</h3>
           {audio.map((f) => (
-            <AudioPlayer key={f.filename} src={f.path} filename={f.filename} />
+            <MediaBlock key={f.filename} file={f} />
           ))}
         </div>
       )}
@@ -93,6 +100,16 @@ export const FileTable = ({ files }: { files: CatalogFile[] }) => {
           <h3 className="text-sm font-medium text-primary-700">Images</h3>
           {images.map((f) => (
             <ImageViewer key={f.filename} src={f.path} filename={f.filename} />
+          ))}
+        </div>
+      )}
+
+      {/* Transcripts with no player to sync to */}
+      {unplayed.length > 0 && (
+        <div className="space-y-3">
+          <h3 className="text-sm font-medium text-primary-700">Transcripts</h3>
+          {unplayed.map((transcript) => (
+            <TranscriptView key={transcript.path} transcript={transcript} />
           ))}
         </div>
       )}

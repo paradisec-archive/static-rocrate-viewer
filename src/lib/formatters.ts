@@ -25,3 +25,11 @@ export const formatDate = (dateStr: string): string => {
     day: 'numeric',
   });
 };
+
+/** `mm:ss.cc` — the timecode ELAN itself shows, so annotation times are comparable. */
+export const formatTimecode = (ms: number): string => {
+  const minutes = Math.floor(ms / 60_000);
+  const seconds = Math.floor((ms % 60_000) / 1000);
+  const centiseconds = Math.floor((ms % 1000) / 10);
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centiseconds).padStart(2, '0')}`;
+};
