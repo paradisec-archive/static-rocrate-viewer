@@ -12,6 +12,10 @@ export const MediaBlock = ({ file }: { file: CatalogFile }) => {
   const { data: transcripts } = useTranscripts();
   const [media, setMedia] = useState<HTMLMediaElement | null>(null);
   const [currentTimeMs, setCurrentTimeMs] = useState(0);
+  // The crate's duration first — `AudioPlayer` preloads nothing, so the element
+  // has none to offer until the reader presses play — then the element's own,
+  // which is authoritative where the two disagree (D21).
+  const [durationMs, setDurationMs] = useState(file.duration === undefined ? undefined : file.duration * 1000);
 
   const blocks = transcripts?.[file.path] ?? [];
   const Player = getMediaSection(file.encodingFormat) === 'video' ? VideoPlayer : AudioPlayer;
@@ -23,6 +27,12 @@ export const MediaBlock = ({ file }: { file: CatalogFile }) => {
       ? {
           ref: setMedia,
           onTimeUpdate: (event) => setCurrentTimeMs(event.currentTarget.currentTime * 1000),
+          onLoadedMetadata: (event) => {
+            const seconds = event.currentTarget.duration;
+            if (Number.isFinite(seconds) && seconds > 0) {
+              setDurationMs(seconds * 1000);
+            }
+          },
         }
       : undefined;
 
@@ -36,7 +46,7 @@ export const MediaBlock = ({ file }: { file: CatalogFile }) => {
     <div className="space-y-3">
       <Player src={file.path} filename={file.filename} sync={sync} />
       {blocks.map((transcript) => (
-        <TranscriptView key={transcript.path} transcript={transcript} currentTimeMs={currentTimeMs} onSeek={seek} />
+        <TranscriptView key={transcript.path} transcript={transcript} currentTimeMs={currentTimeMs} durationMs={durationMs} onSeek={seek} />
       ))}
     </div>
   );

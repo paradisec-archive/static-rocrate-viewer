@@ -3,17 +3,25 @@ import type { Transcript } from '../lib/eaf';
 import { formatDate } from '../lib/formatters';
 import { defaultTierIds, textBearingTiers } from '../lib/transcript';
 import { TranscriptTable } from './TranscriptTable';
+import { TranscriptTimeline } from './TranscriptTimeline';
 
 interface TranscriptViewProps {
   transcript: Transcript;
   /** Absent when nothing playable annotates this transcript — no sync, no seek. */
   currentTimeMs?: number;
+  durationMs?: number;
   onSeek?: (ms: number) => void;
 }
 
-export const TranscriptView = ({ transcript, currentTimeMs, onSeek }: TranscriptViewProps) => {
+const VIEWS = ['Timeline', 'Table'] as const;
+
+export const TranscriptView = ({ transcript, currentTimeMs, durationMs, onSeek }: TranscriptViewProps) => {
   const tiers = useMemo(() => textBearingTiers(transcript.document), [transcript]);
   const [selectedIds, setSelectedIds] = useState(() => defaultTierIds(tiers));
+  // Synced to a player, the timeline is what a player is for — the playhead
+  // moving across the tracks. Unsynced it is a static picture, so the table's
+  // readable text wins (D19).
+  const [view, setView] = useState<(typeof VIEWS)[number]>(currentTimeMs === undefined ? 'Table' : 'Timeline');
 
   if (tiers.length === 0) {
     return null;
@@ -36,32 +44,52 @@ export const TranscriptView = ({ transcript, currentTimeMs, onSeek }: Transcript
         {languageNames && <span>Languages: {languageNames}</span>}
       </div>
 
-      {tiers.length > 1 && (
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
-          <span className="text-xs font-medium uppercase tracking-wider text-primary-500">Tiers</span>
-          <label className="flex items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={allSelected}
-              ref={(element) => {
-                if (element) {
-                  element.indeterminate = selectedIds.length > 0 && !allSelected;
-                }
-              }}
-              onChange={() => setSelectedIds(allSelected ? [] : tiers.map((tier) => tier.tierId))}
-            />
-            All
-          </label>
-          {tiers.map((tier) => (
-            <label key={tier.tierId} className="flex items-center gap-1.5">
-              <input type="checkbox" checked={selectedIds.includes(tier.tierId)} onChange={() => toggleTier(tier.tierId)} />
-              {tier.tierId}
-            </label>
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+        <div className="inline-flex overflow-hidden rounded border border-primary-200">
+          {VIEWS.map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              className={`px-2 py-0.5 text-xs ${view === mode ? 'bg-primary-600 text-white' : 'bg-white text-primary-600 hover:bg-primary-50'}`}
+              aria-pressed={view === mode}
+              onClick={() => setView(mode)}
+            >
+              {mode}
+            </button>
           ))}
         </div>
-      )}
 
-      <TranscriptTable tiers={selectedTiers} currentTimeMs={currentTimeMs} onSeek={onSeek} />
+        {tiers.length > 1 && (
+          <>
+            <span className="text-xs font-medium uppercase tracking-wider text-primary-500">Tiers</span>
+            <label className="flex items-center gap-1.5">
+              <input
+                type="checkbox"
+                checked={allSelected}
+                ref={(element) => {
+                  if (element) {
+                    element.indeterminate = selectedIds.length > 0 && !allSelected;
+                  }
+                }}
+                onChange={() => setSelectedIds(allSelected ? [] : tiers.map((tier) => tier.tierId))}
+              />
+              All
+            </label>
+            {tiers.map((tier) => (
+              <label key={tier.tierId} className="flex items-center gap-1.5">
+                <input type="checkbox" checked={selectedIds.includes(tier.tierId)} onChange={() => toggleTier(tier.tierId)} />
+                {tier.tierId}
+              </label>
+            ))}
+          </>
+        )}
+      </div>
+
+      {view === 'Timeline' ? (
+        <TranscriptTimeline tiers={selectedTiers} currentTimeMs={currentTimeMs} durationMs={durationMs} onSeek={onSeek} />
+      ) : (
+        <TranscriptTable tiers={selectedTiers} currentTimeMs={currentTimeMs} onSeek={onSeek} />
+      )}
     </div>
   );
 };

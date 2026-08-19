@@ -8,4 +8,5 @@ import type { ReactEventHandler } from 'react';
 export interface MediaSync {
   ref: (element: HTMLMediaElement | null) => void;
   onTimeUpdate: ReactEventHandler<HTMLMediaElement>;
+  onLoadedMetadata: ReactEventHandler<HTMLMediaElement>;
 }
