@@ -29,3 +29,16 @@ export interface EafDocument {
   languages: EafLanguage[];
   tiers: EafTier[];
 }
+
+export interface Transcript {
+  filename: string;
+  /** Path to the `.eaf` itself, for the download link. */
+  path: string;
+  document: EafDocument;
+}
+
+/**
+ * Transcripts keyed by the `CatalogFile.path` they render beneath — the host
+ * rendition's, or the `.eaf`'s own when nothing playable annotates it.
+ */
+export type TranscriptIndex = Record<string, Transcript[]>;

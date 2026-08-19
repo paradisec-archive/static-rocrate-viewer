@@ -7,7 +7,7 @@
   },
   "files": {
     // fixtures/ holds archive crates verbatim - reformatting them would defeat their purpose
-    "includes": ["**", "!!src/routeTree.gen.ts", "!!.claude", "!!public/catalog.js", "!!public/rocrate-data.js", "!!fixtures"]
+    "includes": ["**", "!!src/routeTree.gen.ts", "!!.claude", "!!public/catalog.js", "!!public/rocrate-data.js", "!!public/transcripts.js", "!!fixtures"]
   },
   "formatter": {
     "enabled": true,

@@ -3,3 +3,4 @@ dist
 /data
 public/catalog.js
 public/rocrate-data.js
+public/transcripts.js

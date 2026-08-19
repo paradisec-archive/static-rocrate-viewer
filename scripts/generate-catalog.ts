@@ -1,7 +1,10 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { ROCrate } from 'ro-crate';
+import type { Transcript, TranscriptIndex } from '../src/lib/eaf';
 import type { Catalog, CatalogCollection, CatalogFile, CatalogItem } from '../src/lib/types';
+import { parseEaf } from './parse-eaf.ts';
+import { type LinkedFile, resolveAnnotations } from './resolve-annotations.ts';
 
 const resolveStringValue = (val: unknown): string => {
   if (val == null) {
@@ -100,12 +103,47 @@ const findDoi = (rootDataset: Record<string, unknown>): string | undefined => {
   return undefined;
 };
 
+/**
+ * Parse each `.eaf` in the item and file it under the path it renders beneath.
+ * A file that will not parse is dropped with a warning rather than losing the
+ * whole item — the archive's older annotation files are not all well-formed.
+ */
+const buildTranscripts = (files: CatalogFile[], links: LinkedFile[], itemDir: string): TranscriptIndex => {
+  const byFilename = new Map(files.map((file) => [file.filename, file]));
+  const index: TranscriptIndex = {};
+
+  for (const { eaf, host } of resolveAnnotations(links)) {
+    const eafFile = byFilename.get(eaf);
+    const hostFile = host ? byFilename.get(host) : undefined;
+    if (!eafFile) {
+      continue;
+    }
+
+    let transcript: Transcript;
+    try {
+      transcript = {
+        filename: eaf,
+        path: eafFile.path,
+        document: parseEaf(readFileSync(join(itemDir, eaf), 'utf-8')),
+      };
+    } catch (err) {
+      console.error(`  Warning: could not parse ${eaf}: ${err}`);
+      continue;
+    }
+
+    const key = (hostFile ?? eafFile).path;
+    index[key] = [...(index[key] ?? []), transcript];
+  }
+
+  return index;
+};
+
 const processItem = (
   metadataPath: string,
   collectionId: string,
   itemId: string,
   dataDir: string,
-): { item: CatalogItem; collectionName: string; rawJson: unknown } => {
+): { item: CatalogItem; collectionName: string; rawJson: unknown; transcripts: TranscriptIndex } => {
   const json = JSON.parse(readFileSync(metadataPath, 'utf-8'));
   const crate = new ROCrate(json, { array: true, link: true });
   const root = crate.rootDataset;
@@ -136,6 +174,7 @@ const processItem = (
 
   // Process files
   const files: CatalogFile[] = [];
+  const links: LinkedFile[] = [];
   const hasPart = root.hasPart;
   if (Array.isArray(hasPart)) {
     for (const part of hasPart) {
@@ -171,6 +210,13 @@ const processItem = (
         duration,
         doi: fileDoi,
       });
+
+      links.push({
+        filename,
+        encodingFormat,
+        annotationOf: resolveStringArray(fileEntity.annotationOf),
+        hasAnnotation: resolveStringArray(fileEntity.hasAnnotation),
+      });
     }
   }
 
@@ -188,6 +234,7 @@ const processItem = (
     },
     collectionName,
     rawJson: json,
+    transcripts: buildTranscripts(files, links, join(dataDir, collectionId, itemId)),
   };
 };
 
@@ -274,6 +321,7 @@ const main = () => {
   // Process all items
   const collectionItemsMap = new Map<string, CatalogItem[]>();
   const rocrateData: Record<string, unknown> = {};
+  const transcripts: TranscriptIndex = {};
 
   // Store collection-level ro-crate data
   for (const [colId, meta] of collectionMeta) {
@@ -282,7 +330,7 @@ const main = () => {
 
   for (const { metadataPath, collectionId, itemId } of metadataFiles) {
     try {
-      const { item, collectionName, rawJson } = processItem(metadataPath, collectionId, itemId, dataDir);
+      const { item, collectionName, rawJson, transcripts: itemTranscripts } = processItem(metadataPath, collectionId, itemId, dataDir);
 
       if (!collectionItemsMap.has(collectionId)) {
         collectionItemsMap.set(collectionId, []);
@@ -299,6 +347,7 @@ const main = () => {
       collectionItemsMap.get(collectionId)?.push(item);
 
       rocrateData[`${collectionId}/${itemId}`] = rawJson;
+      Object.assign(transcripts, itemTranscripts);
 
       console.error(`  Processed ${collectionId}/${itemId}: ${item.title} (${item.files.length} files)`);
     } catch (err) {
@@ -337,6 +386,13 @@ const main = () => {
   const rocrateJs = `window.__ROCRATE_VIEWER_DATA__ = ${JSON.stringify(rocrateData)};\n`;
   writeFileSync(join(outputDir, 'rocrate-data.js'), rocrateJs);
   console.error(`Wrote rocrate-data.js (${Object.keys(rocrateData).length} entries)`);
+
+  // Its own file, not part of catalog.js: a transcript dwarfs the metadata that
+  // every page needs, and the item page is the only thing that reads it.
+  const transcriptsJs = `window.__ROCRATE_VIEWER_TRANSCRIPTS__ = ${JSON.stringify(transcripts)};\n`;
+  writeFileSync(join(outputDir, 'transcripts.js'), transcriptsJs);
+  const transcriptCount = Object.values(transcripts).reduce((total, list) => total + list.length, 0);
+  console.error(`Wrote transcripts.js (${transcriptCount} transcripts on ${Object.keys(transcripts).length} files)`);
 
   console.error('Done!');
 };

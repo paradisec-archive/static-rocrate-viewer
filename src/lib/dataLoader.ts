@@ -1,10 +1,12 @@
 import { ROCrate } from 'ro-crate';
+import type { TranscriptIndex } from './eaf';
 import type { Catalog } from './types';
 
 declare global {
   interface Window {
     __ROCRATE_VIEWER_CATALOG__?: Catalog;
     __ROCRATE_VIEWER_DATA__?: Record<string, unknown>;
+    __ROCRATE_VIEWER_TRANSCRIPTS__?: TranscriptIndex;
   }
 }
 
@@ -28,3 +30,7 @@ export const getRoCrate = (collectionId: string, itemId?: string): ROCrate => {
   }
   return new ROCrate(json, { array: true, link: true });
 };
+
+// Absent whenever an older generator produced the data directory, and a missing
+// script under file:// fails silently — so no transcripts is normal, not an error.
+export const getTranscripts = (): TranscriptIndex => window.__ROCRATE_VIEWER_TRANSCRIPTS__ ?? {};
