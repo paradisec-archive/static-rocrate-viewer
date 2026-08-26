@@ -4,6 +4,8 @@
 
 A static web application for browsing [RO-Crate](https://www.researchobject.org/ro-crate/) archives. Works by double-clicking `index.html` (file:// protocol)
 
+Formerly **Static RO-Crate Viewer**, previously at `paradisec-archive/static-rocrate-viewer`.
+
 ## Features
 
 - **Collections → Items → Files** hierarchy for browsing archives
