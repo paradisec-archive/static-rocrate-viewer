@@ -18,7 +18,7 @@ export default {
       '@semantic-release/github',
       {
         assets: [
-          { path: 'static-rocrate-viewer.tar.gz', label: 'Release tarball' },
+          { path: 'bowerbird.tar.gz', label: 'Release tarball' },
           { path: 'install.sh', label: 'Install script' },
         ],
       },

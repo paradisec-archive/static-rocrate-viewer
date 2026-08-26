@@ -1,5 +1,5 @@
 {
-  "name": "static-rocrate-viewer",
+  "name": "bowerbird",
   "private": true,
   "version": "2.1.0",
   "packageManager": "pnpm@11.22.0",

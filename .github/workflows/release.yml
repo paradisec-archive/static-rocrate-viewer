@@ -37,7 +37,7 @@ jobs:
           cp dist/index.html release-staging/
           cp -r dist/assets release-staging/
           cp dist/generate-catalog.js release-staging/
-          tar -czf static-rocrate-viewer.tar.gz -C release-staging index.html assets generate-catalog.js
+          tar -czf bowerbird.tar.gz -C release-staging index.html assets generate-catalog.js
 
       - name: Release
         run: pnpm semantic-release

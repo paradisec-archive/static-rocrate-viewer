@@ -1,6 +1,6 @@
-# Static RO-Crate Viewer
+# Bowerbird
 
-**[View the showcase site](https://crate-works.github.io/static-rocrate-viewer/)**
+**[View the showcase site](https://bowerbird.crate-works.org)**
 
 A static web application for browsing [RO-Crate](https://www.researchobject.org/ro-crate/) archives. Works by double-clicking `index.html` (file:// protocol)
 
@@ -18,7 +18,7 @@ A static web application for browsing [RO-Crate](https://www.researchobject.org/
 If you have a `data/` directory of RO-Crate files, the install script downloads a pre-built release and generates the viewer:
 
 ```bash
-curl -fsSL https://github.com/crate-works/static-rocrate-viewer/releases/latest/download/install.sh | bash
+curl -fsSL https://github.com/crate-works/bowerbird/releases/latest/download/install.sh | bash
 ```
 
 **Requirements:** `bash`, `curl`, `tar`, `node` (v20+)

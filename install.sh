@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="crate-works/static-rocrate-viewer"
-TARBALL="static-rocrate-viewer.tar.gz"
+REPO="crate-works/bowerbird"
+TARBALL="bowerbird.tar.gz"
 
-echo "Static RO-Crate Viewer — Installer"
-echo "===================================="
+echo "Bowerbird — Installer"
+echo "===================="
 
 # Check prerequisites
 for cmd in curl tar node; do
