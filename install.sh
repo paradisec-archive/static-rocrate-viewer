@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="paradisec-archive/static-rocrate-viewer"
+REPO="crate-works/static-rocrate-viewer"
 TARBALL="static-rocrate-viewer.tar.gz"
 
 echo "Static RO-Crate Viewer — Installer"
