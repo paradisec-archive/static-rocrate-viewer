@@ -1,3 +1,18 @@
+# [3.0.0](https://github.com/crate-works/bowerbird/compare/v2.1.0...v3.0.0) (2026-08-26)
+
+
+* feat!: rename the release tarball to bowerbird.tar.gz ([d3ffa84](https://github.com/crate-works/bowerbird/commit/d3ffa845da6f1be79f07702871bc43c92fdd5b6b))
+
+
+### BREAKING CHANGES
+
+* the release asset is now bowerbird.tar.gz rather than
+static-rocrate-viewer.tar.gz. A locally saved copy of the old install.sh
+looks for the old name and will fail to download it. Re-fetch the
+installer from the new location:
+
+  curl -fsSL https://github.com/crate-works/bowerbird/releases/latest/download/install.sh | bash
+
 # [2.1.0](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v2.0.2...v2.1.0) (2026-08-26)
 
 
