@@ -16,6 +16,7 @@ declare module 'ro-crate' {
     constructor(data?: unknown, options?: ROCrateOptions);
     rootDataset: Entity;
     getEntity(id: string): Entity | undefined;
+    entities(): Iterable<Entity>;
     toJSON(): unknown;
   }
 

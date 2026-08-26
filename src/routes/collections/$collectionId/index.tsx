@@ -12,7 +12,9 @@ export const Route = createFileRoute('/collections/$collectionId/')({
 function CollectionPage() {
   const { collectionId } = Route.useParams();
   const { data: catalog, isLoading, error } = useCatalog();
-  const { data: crate } = useRoCrate(collectionId);
+  const collection = catalog?.collections.find((c) => c.id === collectionId);
+  const { data: crate } = useRoCrate(collection?.crateKey);
+  const entity = collection?.entityId ? crate?.getEntity(collection.entityId) : undefined;
 
   if (isLoading) {
     return <p className="text-primary-500">Loading...</p>;
@@ -21,7 +23,6 @@ function CollectionPage() {
     return <p className="text-red-600">Error: {error.message}</p>;
   }
 
-  const collection = catalog?.collections.find((c) => c.id === collectionId);
   if (!collection) {
     return <p className="text-red-600">Collection not found: {collectionId}</p>;
   }
@@ -39,9 +40,9 @@ function CollectionPage() {
         </div>
       </div>
 
-      {crate && (
+      {entity && (
         <div className="mb-8">
-          <MetadataPanel rootDataset={crate.rootDataset} />
+          <MetadataPanel entity={entity} />
         </div>
       )}
 

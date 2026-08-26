@@ -1,118 +1,62 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
-import { ROCrate } from 'ro-crate';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { basename, join, relative, resolve, sep } from 'node:path';
 import type { Transcript, TranscriptIndex } from '../src/lib/eaf';
 import type { Catalog, CatalogCollection, CatalogFile, CatalogItem } from '../src/lib/types';
+import { type CrateCollection, type CrateFile, parseCrate } from './parse-crate.ts';
 import { parseEaf } from './parse-eaf.ts';
-import { type LinkedFile, resolveAnnotations } from './resolve-annotations.ts';
+import { resolveAnnotations } from './resolve-annotations.ts';
 
-const resolveStringValue = (val: unknown): string => {
-  if (val == null) {
-    return '';
-  }
-
-  if (typeof val === 'string') {
-    return val;
-  }
-
-  if (Array.isArray(val)) {
-    return val.map(resolveStringValue).filter(Boolean).join(', ');
-  }
-
-  if (typeof val === 'object' && val !== null) {
-    const obj = val as Record<string, unknown>;
-    if (obj.name) {
-      return resolveStringValue(obj.name);
-    }
-
-    if (obj['@id']) {
-      return String(obj['@id']);
-    }
-  }
-
-  return String(val);
-};
-
-const resolveStringArray = (val: unknown): string[] => {
-  if (val == null) {
-    return [];
-  }
-
-  const arr = Array.isArray(val) ? val : [val];
-
-  return arr.map(resolveStringValue).filter(Boolean);
-};
-
-const findMetadataFile = (dir: string, prefix: string): string | undefined => {
-  const candidates = [join(dir, 'ro-crate-metadata.json'), join(dir, `${prefix}-ro-crate-metadata.json`)];
-  return candidates.find((p) => existsSync(p));
-};
-
-const findMetadataFiles = (dataDir: string): { metadataPath: string; collectionId: string; itemId: string }[] => {
-  const results: {
-    metadataPath: string;
-    collectionId: string;
-    itemId: string;
-  }[] = [];
-
-  if (!existsSync(dataDir)) {
-    console.error(`Data directory not found: ${dataDir}`);
-    process.exit(1);
-  }
-
-  for (const colDir of readdirSync(dataDir)) {
-    const colPath = join(dataDir, colDir);
-    if (!statSync(colPath).isDirectory()) {
-      continue;
-    }
-
-    for (const itemDir of readdirSync(colPath)) {
-      const itemPath = join(colPath, itemDir);
-      if (!statSync(itemPath).isDirectory()) {
-        continue;
-      }
-
-      const metadataPath = findMetadataFile(itemPath, itemDir);
-      if (metadataPath) {
-        results.push({
-          metadataPath,
-          collectionId: colDir,
-          itemId: itemDir,
-        });
-      }
-    }
-  }
-
-  return results;
-};
-
-const findDoi = (rootDataset: Record<string, unknown>): string | undefined => {
-  const identifiers = rootDataset.identifier;
-  if (!Array.isArray(identifiers)) {
-    return undefined;
-  }
-  for (const id of identifiers) {
-    if (typeof id === 'object' && id !== null) {
-      const entity = id as Record<string, unknown>;
-      const name = entity.name;
-      if (name === 'doi' || (Array.isArray(name) && name.includes('doi'))) {
-        return resolveStringValue(entity.value);
-      }
-    }
-  }
-  return undefined;
-};
+const isMetadataFile = (name: string): boolean => name === 'ro-crate-metadata.json' || name.endsWith('-ro-crate-metadata.json');
 
 /**
- * Parse each `.eaf` in the item and file it under the path it renders beneath.
- * A file that will not parse is dropped with a warning rather than losing the
- * whole item — the archive's older annotation files are not all well-formed.
+ * Every crate under the data directory, one per directory. Which crates hold
+ * collections and which hold objects is the crate's business, not the
+ * directory's, so the walk goes all the way down and lets `parseCrate` decide.
  */
-const buildTranscripts = (files: CatalogFile[], links: LinkedFile[], itemDir: string): TranscriptIndex => {
-  const byFilename = new Map(files.map((file) => [file.filename, file]));
+const findCrates = (dir: string): string[] => {
+  const nested: string[] = [];
+  const metadata: string[] = [];
+
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith('.')) {
+      continue;
+    }
+    const path = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      nested.push(...findCrates(path));
+    } else if (isMetadataFile(entry.name)) {
+      metadata.push(path);
+    }
+  }
+
+  const preferred = metadata.find((path) => basename(path) === 'ro-crate-metadata.json') ?? metadata[0];
+  return preferred ? [preferred, ...nested] : nested;
+};
+
+const urlPath = (...segments: string[]): string =>
+  segments
+    .filter(Boolean)
+    .flatMap((segment) => segment.split(/[\\/]/))
+    .filter(Boolean)
+    .map(encodeURIComponent)
+    .join('/');
+
+interface DiskFile {
+  file: CrateFile;
+  catalog: CatalogFile;
+  diskPath: string;
+}
+
+/**
+ * Parse each `.eaf` in the object and file it under the path it renders beneath.
+ * A file that will not parse is dropped with a warning rather than losing the
+ * whole object — the archive's older annotation files are not all well-formed.
+ */
+const buildTranscripts = (files: DiskFile[]): TranscriptIndex => {
+  const byFilename = new Map(files.map((file) => [file.catalog.filename, file]));
   const index: TranscriptIndex = {};
 
-  for (const { eaf, host } of resolveAnnotations(links)) {
+  for (const { eaf, host } of resolveAnnotations(files.map((entry) => entry.file))) {
     const eafFile = byFilename.get(eaf);
     const hostFile = host ? byFilename.get(host) : undefined;
     if (!eafFile) {
@@ -123,168 +67,61 @@ const buildTranscripts = (files: CatalogFile[], links: LinkedFile[], itemDir: st
     try {
       transcript = {
         filename: eaf,
-        path: eafFile.path,
-        document: parseEaf(readFileSync(join(itemDir, eaf), 'utf-8')),
+        path: eafFile.catalog.path,
+        document: parseEaf(readFileSync(eafFile.diskPath, 'utf-8')),
       };
     } catch (err) {
       console.error(`  Warning: could not parse ${eaf}: ${err}`);
       continue;
     }
 
-    const key = (hostFile ?? eafFile).path;
+    const key = (hostFile ?? eafFile).catalog.path;
     index[key] = [...(index[key] ?? []), transcript];
   }
 
   return index;
 };
 
-const processItem = (
-  metadataPath: string,
-  collectionId: string,
-  itemId: string,
-  dataDir: string,
-): { item: CatalogItem; collectionName: string; rawJson: unknown; transcripts: TranscriptIndex } => {
-  const json = JSON.parse(readFileSync(metadataPath, 'utf-8'));
-  const crate = new ROCrate(json, { array: true, link: true });
-  const root = crate.rootDataset;
+/** A crate lists renditions the archive did not ship; only shipped files count. */
+const toDiskFiles = (files: CrateFile[], crateDir: string, pathPrefix: string[]): DiskFile[] => {
+  const present: DiskFile[] = [];
 
-  const title = resolveStringValue(root.name);
-  const description = resolveStringValue(root.description);
-  const dateCreated = resolveStringValue(root.dateCreated);
-  const doi = findDoi(root as Record<string, unknown>);
-  const languages = resolveStringArray(root.inLanguage);
-  const countries = resolveStringArray(root.countries);
-
-  // Derive collection name from memberOf in raw JSON
-  // (link: true may strip inline properties when the entity isn't in @graph)
-  let collectionName = collectionId;
-  const graph = (json as Record<string, unknown>)['@graph'] as unknown[];
-  if (Array.isArray(graph)) {
-    const rawRoot = graph.find((e) => typeof e === 'object' && e !== null && (e as Record<string, unknown>)['@id'] === root['@id']) as
-      | Record<string, unknown>
-      | undefined;
-    if (rawRoot?.memberOf) {
-      const rawMemberOf = rawRoot.memberOf as Record<string, unknown>;
-      const name = rawMemberOf.name;
-      if (typeof name === 'string' && name) {
-        collectionName = name;
-      }
+  for (const file of files) {
+    const diskPath = join(crateDir, ...file.cratePath.split('/'));
+    if (!existsSync(diskPath)) {
+      console.error(`Warning: File not found, skipping: ${diskPath}`);
+      continue;
     }
+
+    present.push({
+      file,
+      catalog: {
+        filename: file.filename,
+        path: urlPath(...pathPrefix, file.cratePath),
+        encodingFormat: file.encodingFormat,
+        contentSize: file.contentSize,
+        duration: file.duration,
+        doi: file.doi,
+      },
+      diskPath,
+    });
   }
 
-  // Process files
-  const files: CatalogFile[] = [];
-  const links: LinkedFile[] = [];
-  const hasPart = root.hasPart;
-  if (Array.isArray(hasPart)) {
-    for (const part of hasPart) {
-      if (typeof part !== 'object' || part === null) {
-        continue;
-      }
-      const fileEntity = part as Record<string, unknown>;
-
-      // Get filename from the entity
-      const filename = resolveStringValue(fileEntity.filename) || resolveStringValue(fileEntity.name) || '';
-      if (!filename) {
-        continue;
-      }
-
-      // Check if file exists on disk (relative to item directory)
-      const filePath = join(dataDir, collectionId, itemId, filename);
-      if (!existsSync(filePath)) {
-        console.error(`Warning: File not found, skipping: ${filePath}`);
-        continue;
-      }
-
-      const relativePath = `${basename(dataDir)}/${collectionId}/${itemId}/${filename}`;
-      const encodingFormat = resolveStringValue(fileEntity.encodingFormat);
-      const contentSize = Number(fileEntity.contentSize) || 0;
-      const duration = fileEntity.duration != null ? Number(fileEntity.duration) : undefined;
-      const fileDoi = resolveStringValue(fileEntity.doi) || undefined;
-
-      files.push({
-        filename,
-        path: relativePath,
-        encodingFormat,
-        contentSize,
-        duration,
-        doi: fileDoi,
-      });
-
-      links.push({
-        filename,
-        encodingFormat,
-        annotationOf: resolveStringArray(fileEntity.annotationOf),
-        hasAnnotation: resolveStringArray(fileEntity.hasAnnotation),
-      });
-    }
-  }
-
-  return {
-    item: {
-      id: itemId,
-      collectionId,
-      title,
-      description,
-      dateCreated,
-      doi,
-      languages,
-      countries,
-      files,
-    },
-    collectionName,
-    rawJson: json,
-    transcripts: buildTranscripts(files, links, join(dataDir, collectionId, itemId)),
-  };
+  return present;
 };
 
-interface CollectionMeta {
-  name: string;
-  description?: string;
-  dateCreated?: string;
-  doi?: string;
-  languages: string[];
-  countries: string[];
-  rawJson: unknown;
+interface CollectionMeta extends CrateCollection {
+  crateKey?: string;
 }
 
-const processCollectionMetadata = (dataDir: string): Map<string, CollectionMeta> => {
-  const results = new Map<string, CollectionMeta>();
+interface HarvestedItem {
+  crateKey: string;
+  item: CatalogItem;
+  files: DiskFile[];
+}
 
-  for (const colDir of readdirSync(dataDir)) {
-    const colPath = join(dataDir, colDir);
-    if (!statSync(colPath).isDirectory()) {
-      continue;
-    }
-
-    const metadataPath = findMetadataFile(colPath, colDir);
-    if (!metadataPath) {
-      continue;
-    }
-
-    try {
-      const json = JSON.parse(readFileSync(metadataPath, 'utf-8'));
-      const crate = new ROCrate(json, { array: true, link: true });
-      const root = crate.rootDataset;
-
-      results.set(colDir, {
-        name: resolveStringValue(root.name) || colDir,
-        description: resolveStringValue(root.description) || undefined,
-        dateCreated: resolveStringValue(root.dateCreated) || undefined,
-        doi: findDoi(root as Record<string, unknown>),
-        languages: resolveStringArray(root.inLanguage),
-        countries: resolveStringArray(root.countries),
-        rawJson: json,
-      });
-
-      console.error(`  Found collection metadata: ${colDir}`);
-    } catch (err) {
-      console.error(`  Error reading collection metadata ${metadataPath}: ${err}`);
-    }
-  }
-
-  return results;
-};
+/** A crate deeper in the tree describes an object more specifically than one above it. */
+const crateDepth = (crateKey: string): number => (crateKey === '.' ? 0 : crateKey.split('/').length);
 
 const main = () => {
   const args = process.argv.slice(2);
@@ -303,65 +140,119 @@ const main = () => {
 
   dataDir = resolve(dataDir);
   outputDir = resolve(outputDir);
+
+  if (!existsSync(dataDir)) {
+    console.error(`Data directory not found: ${dataDir}`);
+    process.exit(1);
+  }
+
   mkdirSync(outputDir, { recursive: true });
 
   console.error(`Scanning ${dataDir} for RO-Crate metadata...`);
 
-  // Process collection-level metadata
-  const collectionMeta = processCollectionMetadata(dataDir);
-
-  const metadataFiles = findMetadataFiles(dataDir);
-  if (metadataFiles.length === 0) {
+  const cratePaths = findCrates(dataDir);
+  if (cratePaths.length === 0) {
     console.error('No RO-Crate metadata files found');
     process.exit(1);
   }
 
-  console.error(`Found ${metadataFiles.length} items`);
+  console.error(`Found ${cratePaths.length} crates`);
 
-  // Process all items
-  const collectionItemsMap = new Map<string, CatalogItem[]>();
+  const collectionMeta = new Map<string, CollectionMeta>();
+  const collectionItems = new Map<string, CatalogItem[]>();
   const rocrateData: Record<string, unknown> = {};
   const transcripts: TranscriptIndex = {};
+  const dataDirName = basename(dataDir);
+  const harvested = new Map<string, HarvestedItem>();
 
-  // Store collection-level ro-crate data
-  for (const [colId, meta] of collectionMeta) {
-    rocrateData[colId] = meta.rawJson;
-  }
+  for (const cratePath of cratePaths) {
+    const crateDir = join(cratePath, '..');
+    const relativeDir = relative(dataDir, crateDir);
+    const crateKey = relativeDir.split(sep).filter(Boolean).join('/') || '.';
 
-  for (const { metadataPath, collectionId, itemId } of metadataFiles) {
     try {
-      const { item, collectionName, rawJson, transcripts: itemTranscripts } = processItem(metadataPath, collectionId, itemId, dataDir);
+      const json = JSON.parse(readFileSync(cratePath, 'utf-8'));
+      const { collections, objects, warnings } = parseCrate(json, basename(crateDir));
 
-      if (!collectionItemsMap.has(collectionId)) {
-        collectionItemsMap.set(collectionId, []);
-        // If no collection-level metadata, create a fallback from item's memberOf
-        if (!collectionMeta.has(collectionId)) {
-          collectionMeta.set(collectionId, {
-            name: collectionName,
+      for (const warning of warnings) {
+        console.error(`  Warning: ${warning}`);
+      }
+
+      if (collections.length === 0 && objects.length === 0) {
+        console.error(`  Warning: no collections or objects in ${cratePath}, skipping`);
+        continue;
+      }
+
+      rocrateData[crateKey] = json;
+
+      for (const collection of collections) {
+        collectionMeta.set(collection.id, { ...collection, crateKey });
+        console.error(`  Found collection: ${collection.id} (${collection.name})`);
+      }
+
+      for (const object of objects) {
+        const files = toDiskFiles(object.files, crateDir, [dataDirName, relativeDir]);
+
+        const item: CatalogItem = {
+          id: object.id,
+          collectionId: object.collectionId,
+          crateKey,
+          entityId: object.entityId,
+          title: object.title,
+          description: object.description,
+          dateCreated: object.dateCreated,
+          doi: object.doi,
+          languages: object.languages,
+          countries: object.countries,
+          files: files.map((file) => file.catalog),
+        };
+
+        // Two crates may describe the same object; the deeper one is the more specific.
+        const key = `${object.collectionId}/${object.id}`;
+        const existing = harvested.get(key);
+        if (existing) {
+          const keep = crateDepth(existing.crateKey) >= crateDepth(crateKey) ? existing.crateKey : crateKey;
+          console.error(`  Warning: ${key} described by both ${existing.crateKey} and ${crateKey}, keeping ${keep}`);
+          if (keep !== crateKey) {
+            continue;
+          }
+        }
+        harvested.set(key, { crateKey, item, files });
+
+        // A collection the objects name but no crate describes still gets a card.
+        if (!collectionMeta.has(object.collectionId)) {
+          collectionMeta.set(object.collectionId, {
+            id: object.collectionId,
+            entityId: object.collectionId,
+            name: object.collectionName ?? object.collectionId,
             languages: [],
             countries: [],
-            rawJson: null,
           });
         }
+
+        console.error(`  Processed ${key}: ${object.title} (${item.files.length} files)`);
       }
-      collectionItemsMap.get(collectionId)?.push(item);
-
-      rocrateData[`${collectionId}/${itemId}`] = rawJson;
-      Object.assign(transcripts, itemTranscripts);
-
-      console.error(`  Processed ${collectionId}/${itemId}: ${item.title} (${item.files.length} files)`);
     } catch (err) {
-      console.error(`  Error processing ${metadataPath}: ${err}`);
+      console.error(`  Error processing ${cratePath}: ${err}`);
     }
   }
 
-  // Build catalog
-  const collections: CatalogCollection[] = Array.from(collectionItemsMap.entries())
+  for (const { item, files } of harvested.values()) {
+    if (!collectionItems.has(item.collectionId)) {
+      collectionItems.set(item.collectionId, []);
+    }
+    collectionItems.get(item.collectionId)?.push(item);
+    Object.assign(transcripts, buildTranscripts(files));
+  }
+
+  const collections: CatalogCollection[] = Array.from(collectionItems.entries())
     .sort(([a], [b]) => a.localeCompare(b))
     .map(([id, items]) => {
       const meta = collectionMeta.get(id);
       return {
         id,
+        crateKey: meta?.crateKey,
+        entityId: meta?.entityId,
         name: meta?.name ?? id,
         description: meta?.description,
         dateCreated: meta?.dateCreated,
@@ -377,15 +268,13 @@ const main = () => {
     collections,
   };
 
-  // Write catalog.js
   const catalogJs = `window.__ROCRATE_VIEWER_CATALOG__ = ${JSON.stringify(catalog, null, 2)};\n`;
   writeFileSync(join(outputDir, 'catalog.js'), catalogJs);
-  console.error(`Wrote catalog.js (${collections.length} collections, ${metadataFiles.length} items)`);
+  console.error(`Wrote catalog.js (${collections.length} collections, ${harvested.size} items)`);
 
-  // Write rocrate-data.js
   const rocrateJs = `window.__ROCRATE_VIEWER_DATA__ = ${JSON.stringify(rocrateData)};\n`;
   writeFileSync(join(outputDir, 'rocrate-data.js'), rocrateJs);
-  console.error(`Wrote rocrate-data.js (${Object.keys(rocrateData).length} entries)`);
+  console.error(`Wrote rocrate-data.js (${Object.keys(rocrateData).length} crates)`);
 
   // Its own file, not part of catalog.js: a transcript dwarfs the metadata that
   // every page needs, and the item page is the only thing that reads it.

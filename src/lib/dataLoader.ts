@@ -18,15 +18,15 @@ export const getCatalog = (): Catalog => {
   return data;
 };
 
-export const getRoCrate = (collectionId: string, itemId?: string): ROCrate => {
+// One crate can describe a whole collection, so several items may share a key.
+export const getRoCrate = (crateKey: string): ROCrate => {
   const allData = window.__ROCRATE_VIEWER_DATA__;
   if (!allData) {
     throw new Error('RO-Crate data not loaded.');
   }
-  const key = itemId ? `${collectionId}/${itemId}` : collectionId;
-  const json = allData[key];
+  const json = allData[crateKey];
   if (!json) {
-    throw new Error(`No RO-Crate data for ${key}`);
+    throw new Error(`No RO-Crate data for ${crateKey}`);
   }
   return new ROCrate(json, { array: true, link: true });
 };

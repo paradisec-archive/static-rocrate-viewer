@@ -25,6 +25,12 @@ curl -fsSL https://github.com/paradisec-archive/static-rocrate-viewer/releases/l
 
 ### Expected data directory structure
 
+The generator walks `data/` for every `ro-crate-metadata.json` it can find and
+reads collections and items out of the crates themselves, so the directory
+layout is up to you. Two shapes are common.
+
+**A crate per item**, which is what the PARADISEC catalog exports:
+
 ```
 data/
 └── {CollectionId}/
@@ -35,6 +41,29 @@ data/
         ├── file1.eaf               # ELAN transcript (optional)
         └── file1.jpg
 ```
+
+**One crate describing a whole collection**, which is what tools like
+[lameta](https://github.com/onset/lameta) export:
+
+```
+data/
+└── {CollectionId}/
+    ├── ro-crate-metadata.json    # The collection and every item in it
+    └── Sessions/
+        └── {ItemId}/
+            ├── file1.wav
+            └── file1.jpg
+```
+
+Either way the viewer shows the same three levels — collections, items, files.
+A collection is any `RepositoryCollection` in a crate, an item is any
+`RepositoryObject`, and an item's files are its `hasPart` plus the `hasPart` of
+any directory `Dataset` it points at via `subjectOf`. Identifiers come from the
+crate's own `collectionIdentifier` / `itemIdentifier` where it states them, and
+are derived from the entity's `@id` where it does not. Anything an export tool
+adds to describe itself — lameta's `.sprj` and `.session` files, its `People/`
+and `Sessions/` grouping datasets — is used to find the content and then left
+out of the display.
 
 An `.eaf` renders beneath the recording it annotates. The viewer works out which
 recording that is from the crate's `hasAnnotation` / `annotationOf` links, falling
@@ -116,8 +145,8 @@ pnpm test          # Run once
 pnpm test:watch    # Watch mode
 ```
 
-Vitest, Node environment. Covers the generator's EAF parser and annotation
-resolver, and the pure modules under `src/lib/`. Lefthook's pre-commit hook runs
+Vitest, Node environment. Covers the generator's crate parser, EAF parser and
+annotation resolver, and the pure modules under `src/lib/`. Lefthook's pre-commit hook runs
 the tests alongside the linters.
 
 ### Linting

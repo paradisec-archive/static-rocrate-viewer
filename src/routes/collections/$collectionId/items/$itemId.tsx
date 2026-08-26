@@ -12,10 +12,11 @@ export const Route = createFileRoute('/collections/$collectionId/items/$itemId')
 function ItemPage() {
   const { collectionId, itemId } = Route.useParams();
   const { data: catalog } = useCatalog();
-  const { data: crate, isLoading, error } = useRoCrate(collectionId, itemId);
 
   const collection = catalog?.collections.find((c) => c.id === collectionId);
   const item = collection?.items.find((i) => i.id === itemId);
+  const { data: crate, isLoading, error } = useRoCrate(item?.crateKey);
+  const entity = item ? crate?.getEntity(item.entityId) : undefined;
 
   if (isLoading) {
     return <p className="text-primary-500">Loading...</p>;
@@ -46,7 +47,7 @@ function ItemPage() {
       <h1 className="mb-6 text-2xl font-bold text-primary-900">{item.title}</h1>
 
       <div className="space-y-8">
-        {crate && <MetadataPanel rootDataset={crate.rootDataset} />}
+        {entity && <MetadataPanel entity={entity} />}
         <FileTable files={item.files} />
       </div>
     </div>

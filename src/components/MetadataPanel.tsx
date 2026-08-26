@@ -1,26 +1,5 @@
 import type { Entity } from 'ro-crate';
-
-const resolveValue = (value: unknown): string => {
-  if (value == null) {
-    return '';
-  }
-  if (typeof value === 'string') {
-    return value;
-  }
-  if (Array.isArray(value)) {
-    return value.map(resolveValue).filter(Boolean).join(', ');
-  }
-  if (typeof value === 'object') {
-    const obj = value as Entity;
-    if (obj.name) {
-      return resolveValue(obj.name);
-    }
-    if (obj['@id']) {
-      return String(obj['@id']);
-    }
-  }
-  return String(value);
-};
+import { identifierValue, resolveValue } from '../lib/roCrateValue';
 
 const DISPLAY_FIELDS: [string, string][] = [
   ['name', 'Title'],
@@ -28,11 +7,14 @@ const DISPLAY_FIELDS: [string, string][] = [
   ['dateCreated', 'Date Created'],
   ['dateModified', 'Date Modified'],
   ['originatedOn', 'Originated On'],
+  ['startDate', 'Date'],
   ['inLanguage', 'Languages'],
-  ['subjectLanguages', 'Subject Languages'],
+  ['ldac:subjectLanguage', 'Subject Languages'],
   ['countries', 'Countries'],
   ['contentLocation', 'Location'],
   ['publisher', 'Publisher'],
+  ['author', 'Author'],
+  ['accountablePerson', 'Accountable Person'],
   ['recorder', 'Recorder'],
   ['speaker', 'Speakers'],
   ['license', 'Licence'],
@@ -40,18 +22,8 @@ const DISPLAY_FIELDS: [string, string][] = [
   ['languageGenre', 'Genre'],
 ];
 
-export const MetadataPanel = ({ rootDataset }: { rootDataset: Entity }) => {
-  // Find DOI from identifiers
-  const identifiers = rootDataset.identifier as unknown[];
-  let doi: string | undefined;
-  if (Array.isArray(identifiers)) {
-    for (const id of identifiers) {
-      const entity = id as Entity;
-      if (entity?.name === 'doi' || (Array.isArray(entity?.name) && entity.name.includes('doi'))) {
-        doi = resolveValue(entity.value);
-      }
-    }
-  }
+export const MetadataPanel = ({ entity }: { entity: Entity }) => {
+  const doi = identifierValue(entity, 'doi');
 
   return (
     <div className="rounded-lg border border-primary-200 bg-white">
@@ -67,7 +39,7 @@ export const MetadataPanel = ({ rootDataset }: { rootDataset: Entity }) => {
           </div>
         )}
         {DISPLAY_FIELDS.map(([field, label]) => {
-          const raw = rootDataset[field];
+          const raw = entity[field];
           const value = resolveValue(raw);
           if (!value) {
             return null;

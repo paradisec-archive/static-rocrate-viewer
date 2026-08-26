@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { getRoCrate } from '../lib/dataLoader';
 
-export const useRoCrate = (collectionId: string, itemId?: string) =>
+export const useRoCrate = (crateKey: string | undefined) =>
   useQuery({
-    queryKey: ['rocrate', collectionId, itemId],
-    queryFn: () => getRoCrate(collectionId, itemId),
+    queryKey: ['rocrate', crateKey],
+    queryFn: () => getRoCrate(crateKey as string),
+    enabled: !!crateKey,
     staleTime: Infinity,
   });
