@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v2.0.2...v2.1.0) (2026-08-26)
+
+
+### Features
+
+* support a single crate describing a whole collection ([bd663e2](https://github.com/paradisec-archive/static-rocrate-viewer/commit/bd663e2efd320c5c6ff8b678cb48c1fde3c0d43f))
+
 ## [2.0.2](https://github.com/paradisec-archive/static-rocrate-viewer/compare/v2.0.1...v2.0.2) (2026-08-19)
 
 
