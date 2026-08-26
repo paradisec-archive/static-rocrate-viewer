@@ -442,6 +442,13 @@
       background: var(--primary-300);
     }
 
+    .prereqs-note {
+      font-size: 0.85rem;
+      color: var(--primary-700);
+      margin-top: 12px;
+      line-height: 1.55;
+    }
+
     .prereqs-box pre {
       background: var(--white);
       border: 1px solid var(--primary-100);
@@ -895,6 +902,7 @@
         ├── audio.mp3
         ├── audio.eaf
         └── image.jpg</code></pre>
+            <p class="prereqs-note">Or a single crate describing the whole collection — either shape works.</p>
           </div>
         </div>
 
@@ -973,8 +981,8 @@ cd ~/my-archive</code>
             <div class="step-number step-number-sm">2</div>
             <h3>Organise your data</h3>
           </div>
-          <p>Place your RO-Crate data inside a <code>data/</code> folder within your working directory. The viewer expects a two-level hierarchy: <strong>collections</strong> contain <strong>items</strong>, and each item has a metadata file alongside its media files.</p>
-          <p>Here's a concrete example with two collections:</p>
+          <p>Place your RO-Crate data inside a <code>data/</code> folder within your working directory. The generator finds every <code>ro-crate-metadata.json</code> beneath it and reads the <strong>collections</strong> and <strong>items</strong> out of the crates themselves, so the folder layout is up to you.</p>
+          <p>Most archives use one of two shapes. The first gives every item its own crate — this is what the PARADISEC catalogue exports:</p>
           <div class="code-wrapper">
             <code>my-archive/
 └── data/
@@ -993,12 +1001,25 @@ cd ~/my-archive</code>
             ├── ro-crate-metadata.json
             └── AC1-001.wav</code>
           </div>
+          <p>The second uses a single crate describing the collection and every item in it, which is what tools like <a href="https://github.com/onset/lameta" target="_blank" rel="noopener noreferrer">lameta</a> export:</p>
+          <div class="code-wrapper">
+            <code>my-archive/
+└── data/
+    └── VKS4/                           ← Collection folder
+        ├── ro-crate-metadata.json      ← The collection and every item in it
+        └── Sessions/
+            ├── VKS4-001/               ← Item folder, no crate of its own
+            │   ├── VKS4-001-A.wav
+            │   └── VKS4-001-A.jpg
+            └── VKS4-002/
+                └── VKS4-002-A.wav</code>
+          </div>
           <ul class="dot-list">
             <li>Each <strong>collection</strong> is a folder directly inside <code>data/</code> (e.g. <code>NT1</code>, <code>AC1</code>)</li>
-            <li>Each <strong>item</strong> is a subfolder within a collection (e.g. <code>001</code>, <code>002</code>)</li>
-            <li>Every item folder must contain a <code>ro-crate-metadata.json</code> file</li>
+            <li>Every <strong>item</strong> is described by a <code>RepositoryObject</code> in a crate — either its own <code>ro-crate-metadata.json</code>, or one crate covering the whole collection</li>
             <li>Collection-level <code>ro-crate-metadata.json</code> is optional but recommended — it provides the collection name and description shown in the viewer</li>
-            <li>Media files (audio, images, video, transcripts) go alongside the metadata in each item folder</li>
+            <li>Media files (audio, images, video, transcripts) sit wherever the crate says they do — alongside the metadata in the per-item layout, or under a folder the crate points at</li>
+            <li>Either way the viewer shows the same three levels: <strong>collections</strong>, <strong>items</strong>, <strong>files</strong></li>
           </ul>
         </div>
 
